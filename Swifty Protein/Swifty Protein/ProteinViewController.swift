@@ -21,7 +21,9 @@ class ProteinViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    @IBAction func btShare(_ sender: Any) {
+    }
+    
     /*
     // MARK: - Navigation
 

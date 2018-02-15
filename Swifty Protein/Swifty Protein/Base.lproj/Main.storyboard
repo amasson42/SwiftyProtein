@@ -25,7 +25,7 @@
             </objects>
             <point key="canvasLocation" x="668" y="-644"/>
         </scene>
-        <!--Protein Table View Controller-->
+        <!--Ligands-->
         <scene sceneID="H2m-ty-afa">
             <objects>
                 <tableViewController storyboardIdentifier="ProteinList" id="cHe-Kd-tv7" customClass="ProteinTableViewController" customModule="Swifty_Protein" customModuleProvider="target" sceneMemberID="viewController">
@@ -65,7 +65,7 @@
                             <outlet property="delegate" destination="cHe-Kd-tv7" id="vKa-he-E7H"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="93K-78-V3Z"/>
+                    <navigationItem key="navigationItem" title="Ligands" id="93K-78-V3Z"/>
                     <connections>
                         <outlet property="tabProtein" destination="07Q-fa-32s" id="IAq-Io-2b2"/>
                         <segue destination="cp6-yW-oS0" kind="show" identifier="segueToProtein" id="3ff-Jv-VLv"/>
@@ -96,7 +96,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="yxy-kE-ewE"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="tPX-7E-Kc3"/>
+                    <navigationItem key="navigationItem" title="Title" id="tPX-7E-Kc3">
+                        <barButtonItem key="rightBarButtonItem" title="Share" id="Yev-nC-2Ba">
+                            <connections>
+                                <action selector="btShare:" destination="cp6-yW-oS0" id="DFE-op-CjR"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0T9-IA-H8Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
