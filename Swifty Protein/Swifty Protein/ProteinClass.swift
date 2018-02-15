@@ -8,7 +8,7 @@
 
 import Foundation
 
-// https://files.rcsb.org/ligands/view/**.cif
+// https://files.rcsb.org/ligands/view/**.xml
 class Protein {
     
     var ID:         String      //  also the IDs given in the project txt file
@@ -29,8 +29,12 @@ class Protein {
     }
     
     func getURLentete() -> URL {
-        return (URL(string: "https://files.rcsb.org/ligands/view/" + self.ID + ".cif"))!
+        return (URL(string: "https://files.rcsb.org/ligands/view/" + self.ID + ".xml"))!
     }
+    func getURLdata() -> URL {
+        return (URL(string: "https://files.rcsb.org/ligands/view/" + self.ID + "_ideal.pdb"))!
+    }
+    
 }
 
 // https://files.rcsb.org/ligands/view/**_ideal.pdb

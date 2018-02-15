@@ -44,7 +44,7 @@ class LoginViewController: UIViewController {
     }
 }
 
-//  "popup" d'erreur
+//  error "popup"
 extension LoginViewController {
     
     func alert() {

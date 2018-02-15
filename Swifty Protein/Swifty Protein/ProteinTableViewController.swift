@@ -12,7 +12,7 @@ let qos                 = DispatchQoS.background.qosClass
 let queue               = DispatchQueue.global(qos: qos)
 var networkCount: Int   = 0
 
-class ProteinTableViewController: UITableViewController {
+class ProteinTableViewController: UITableViewController,XMLParserDelegate {
 
     var proteins: [Protein] = []
     @IBOutlet var tabProtein: UITableView!
@@ -65,7 +65,7 @@ class ProteinTableViewController: UITableViewController {
 
 }
 
-//  loadingand parsing data
+//  loading and parsing proteins head data
 extension ProteinTableViewController {
     
     func loadProteins() {
@@ -90,8 +90,10 @@ extension ProteinTableViewController {
                 cell.activityInd.startAnimating()
             }
             
-            do {
-                let data = try String(contentsOf: self.proteins[row].getURLentete(), encoding: .utf8)
+            let parser = XMLParser(contentsOf: self.proteins[row].getURLentete())
+            parser?.delegate = self
+            if (parser?.parse())! {
+
                 DispatchQueue.main.async {
                     cell.activityInd.stopAnimating()
                     networkCount -= 1
@@ -99,7 +101,7 @@ extension ProteinTableViewController {
                         UIApplication.shared.isNetworkActivityIndicatorVisible = false
                     }
                 }
-            } catch {
+            } else {
                 DispatchQueue.main.async {
                     self.alert(title: "Error", message: "Cannot access RCSB ligand data for " + self.proteins[row].ID)
                     cell.activityInd.stopAnimating()
@@ -113,9 +115,17 @@ extension ProteinTableViewController {
         }
     }
     
+    func parser(parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+        if elementName == "PDBx:name" {
+//            if let name = attributeDict["name"] {
+//                tempTag.name = name;
+//            }
+            print(elementName,qName,attributeDict)
+        }
+    }
 }
 
-//  "popup" d'erreur
+//  error "popup"
 extension ProteinTableViewController {
     
     func alert(title: String, message: String) {

@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -39,29 +40,42 @@
                             <textInputTraits key="textInputTraits"/>
                         </searchBar>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellProtein" id="4Sj-0D-IE2" userLabel="cellProtein" customClass="ProteinTableViewCell" customModule="Swifty_Protein" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="72" width="320" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellProtein" rowHeight="89" id="4Sj-0D-IE2" userLabel="cellProtein" customClass="ProteinTableViewCell" customModule="Swifty_Protein" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="72" width="320" height="89"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4Sj-0D-IE2" id="thg-9X-Jq6">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="88.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iie-pt-nc4">
-                                            <rect key="frame" x="16" y="0.0" width="42" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iie-pt-nc4">
+                                            <rect key="frame" x="16" y="11" width="42" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="qeq-HR-013">
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="qeq-HR-013">
                                             <rect key="frame" x="284" y="0.0" width="20" height="20"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </activityIndicatorView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wgy-2t-ZyE">
+                                            <rect key="frame" x="16" y="23" width="288" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="wgy-2t-ZyE" firstAttribute="trailing" secondItem="qeq-HR-013" secondAttribute="trailing" id="Fd7-pR-7Lv"/>
+                                        <constraint firstItem="iie-pt-nc4" firstAttribute="top" secondItem="thg-9X-Jq6" secondAttribute="topMargin" id="G0x-PK-XSJ"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="wgy-2t-ZyE" secondAttribute="trailing" id="JKJ-pg-qEM"/>
+                                        <constraint firstItem="wgy-2t-ZyE" firstAttribute="leading" secondItem="thg-9X-Jq6" secondAttribute="leadingMargin" id="P4q-P9-VQc"/>
+                                        <constraint firstItem="iie-pt-nc4" firstAttribute="leading" secondItem="thg-9X-Jq6" secondAttribute="leadingMargin" id="dge-rC-E79"/>
+                                        <constraint firstItem="wgy-2t-ZyE" firstAttribute="top" secondItem="qeq-HR-013" secondAttribute="bottom" constant="3" id="piL-9Z-JTU"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="activityInd" destination="qeq-HR-013" id="xVb-1J-HH5"/>
                                     <outlet property="labID" destination="iie-pt-nc4" id="bF9-70-qCn"/>
+                                    <outlet property="labName" destination="wgy-2t-ZyE" id="W9Y-PB-w9p"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -78,7 +92,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yGo-UN-u3q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1459" y="29"/>
+            <point key="canvasLocation" x="1458.75" y="28.52112676056338"/>
         </scene>
         <!--Title-->
         <scene sceneID="izg-c0-KUG">
