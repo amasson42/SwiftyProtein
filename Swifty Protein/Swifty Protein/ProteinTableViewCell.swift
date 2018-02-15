@@ -10,6 +10,8 @@ import UIKit
 
 class ProteinTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var labID: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

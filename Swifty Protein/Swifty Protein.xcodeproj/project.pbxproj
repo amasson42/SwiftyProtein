@@ -12,6 +12,10 @@
 		35B2D2BE2035909500B94B10 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35B2D2BC2035909500B94B10 /* Main.storyboard */; };
 		35B2D2C02035909500B94B10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35B2D2BF2035909500B94B10 /* Assets.xcassets */; };
 		35B2D2C32035909500B94B10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35B2D2C12035909500B94B10 /* LaunchScreen.storyboard */; };
+		35B2D2CB203596FA00B94B10 /* ProteinTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2D2CA203596FA00B94B10 /* ProteinTableViewController.swift */; };
+		35B2D2CD2035972500B94B10 /* ProteinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2D2CC2035972500B94B10 /* ProteinViewController.swift */; };
+		35B2D2CF2035988800B94B10 /* ProteinTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2D2CE2035988800B94B10 /* ProteinTableViewCell.swift */; };
+		35B2D2D12035994000B94B10 /* ProteinClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2D2D02035994000B94B10 /* ProteinClass.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +26,10 @@
 		35B2D2BF2035909500B94B10 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35B2D2C22035909500B94B10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35B2D2C42035909500B94B10 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		35B2D2CA203596FA00B94B10 /* ProteinTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinTableViewController.swift; sourceTree = "<group>"; };
+		35B2D2CC2035972500B94B10 /* ProteinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinViewController.swift; sourceTree = "<group>"; };
+		35B2D2CE2035988800B94B10 /* ProteinTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinTableViewCell.swift; sourceTree = "<group>"; };
+		35B2D2D02035994000B94B10 /* ProteinClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinClass.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,7 +63,11 @@
 			isa = PBXGroup;
 			children = (
 				35B2D2B82035909500B94B10 /* AppDelegate.swift */,
+				35B2D2D02035994000B94B10 /* ProteinClass.swift */,
 				35B2D2BA2035909500B94B10 /* LoginViewController.swift */,
+				35B2D2CA203596FA00B94B10 /* ProteinTableViewController.swift */,
+				35B2D2CE2035988800B94B10 /* ProteinTableViewCell.swift */,
+				35B2D2CC2035972500B94B10 /* ProteinViewController.swift */,
 				35B2D2BC2035909500B94B10 /* Main.storyboard */,
 				35B2D2BF2035909500B94B10 /* Assets.xcassets */,
 				35B2D2C12035909500B94B10 /* LaunchScreen.storyboard */,
@@ -136,7 +148,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35B2D2D12035994000B94B10 /* ProteinClass.swift in Sources */,
+				35B2D2CB203596FA00B94B10 /* ProteinTableViewController.swift in Sources */,
 				35B2D2BB2035909500B94B10 /* LoginViewController.swift in Sources */,
+				35B2D2CF2035988800B94B10 /* ProteinTableViewCell.swift in Sources */,
+				35B2D2CD2035972500B94B10 /* ProteinViewController.swift in Sources */,
 				35B2D2B92035909500B94B10 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

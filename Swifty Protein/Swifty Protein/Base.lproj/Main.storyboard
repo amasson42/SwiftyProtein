@@ -13,7 +13,7 @@
         <!--Login View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="LoginViewController" customModule="Swifty_Protein" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="First" id="BYZ-38-t0r" customClass="LoginViewController" customModule="Swifty_Protein" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -23,12 +23,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="668" y="-644"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Protein Table View Controller-->
         <scene sceneID="H2m-ty-afa">
             <objects>
-                <tableViewController id="cHe-Kd-tv7" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="07Q-fa-32s">
+                <tableViewController storyboardIdentifier="ProteinList" id="cHe-Kd-tv7" customClass="ProteinTableViewController" customModule="Swifty_Protein" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="07Q-fa-32s" userLabel="tabProtein">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -38,13 +39,25 @@
                             <textInputTraits key="textInputTraits"/>
                         </searchBar>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellId" id="4Sj-0D-IE2">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellProtein" id="4Sj-0D-IE2" userLabel="cellProtein" customClass="ProteinTableViewCell" customModule="Swifty_Protein" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="72" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4Sj-0D-IE2" id="thg-9X-Jq6">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iie-pt-nc4">
+                                            <rect key="frame" x="78" y="0.0" width="42" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="labID" destination="iie-pt-nc4" id="bF9-70-qCn"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -54,6 +67,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="93K-78-V3Z"/>
                     <connections>
+                        <outlet property="tabProtein" destination="07Q-fa-32s" id="IAq-Io-2b2"/>
                         <segue destination="cp6-yW-oS0" kind="show" identifier="segueToProtein" id="3ff-Jv-VLv"/>
                     </connections>
                 </tableViewController>
@@ -64,7 +78,7 @@
         <!--Title-->
         <scene sceneID="izg-c0-KUG">
             <objects>
-                <viewController id="cp6-yW-oS0" sceneMemberID="viewController">
+                <viewController id="cp6-yW-oS0" customClass="ProteinViewController" customModule="Swifty_Protein" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wMV-gM-1Jl">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -91,7 +105,7 @@
         <!--Navigation Controller-->
         <scene sceneID="HgK-7d-BxY">
             <objects>
-                <navigationController storyboardIdentifier="Login" automaticallyAdjustsScrollViewInsets="NO" id="HeP-ay-UnQ" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavToList" automaticallyAdjustsScrollViewInsets="NO" id="HeP-ay-UnQ" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="mv4-o8-hMo">
                         <rect key="frame" x="0.0" y="20" width="320" height="44"/>

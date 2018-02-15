@@ -10,14 +10,18 @@ import UIKit
 
 class ProteinTableViewController: UITableViewController {
 
+    var proteins: [Protein] = []
+    @IBOutlet var tabProtein: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tabProtein.delegate = self
+        tabProtein.dataSource = self
+        tabProtein.rowHeight = UITableViewAutomaticDimension
+        tabProtein.estimatedRowHeight = 40
+        loadProteins()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     override func didReceiveMemoryWarning() {
@@ -25,71 +29,66 @@ class ProteinTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    // MARK: - Table view data source
-
+    func loadProteins() {
+        proteins = []
+        
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return proteins.count
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProtein", for: indexPath)
 
         // Configure the cell...
 
         return cell
     }
-    */
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    internal override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "segueToProtein", sender: indexPath.row)
     }
-    */
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "segueToProtein" {
+            if let vc = segue.destination as? ProteinViewController {
+                let row = sender as! Int
+                vc.title = proteins[row].ID
+            }
+        }
     }
-    */
 
+}
+
+//  "popup" d'erreur
+extension ProteinTableViewController {
+    
+    func alert() {
+        let alert = UIAlertController(title: "", message: "", preferredStyle: .actionSheet)
+//        let alert = UIAlertController(title: "", message: "", preferredStyle: .alert)
+        
+        let OkAction        = UIAlertAction(title: "OK", style: .default, handler: handleOK)
+        let DeleteAction    = UIAlertAction(title: "Delete", style: .destructive, handler: handleDelete)
+        let CancelAction    = UIAlertAction(title: "Cancel", style: .cancel, handler: handleCancel)
+        
+        alert.addAction(OkAction)
+        alert.addAction(DeleteAction)
+        alert.addAction(CancelAction)
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func handleOK(alertAction: UIAlertAction!) -> Void {
+    }
+    func handleDelete(alertAction: UIAlertAction!) -> Void {
+    }
+    func handleCancel(alertAction: UIAlertAction!) {
+    }
+    
 }
