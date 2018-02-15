@@ -8,6 +8,10 @@
 
 import UIKit
 
+let qos                 = DispatchQoS.background.qosClass
+let queue               = DispatchQueue.global(qos: qos)
+var networkCount: Int   = 0
+
 class ProteinTableViewController: UITableViewController {
 
     var proteins: [Protein] = []
@@ -15,9 +19,9 @@ class ProteinTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tabProtein.delegate = self
-        tabProtein.dataSource = self
-        tabProtein.rowHeight = UITableViewAutomaticDimension
+        tabProtein.delegate     = self
+        tabProtein.dataSource   = self
+        tabProtein.rowHeight    = UITableViewAutomaticDimension
         tabProtein.estimatedRowHeight = 40
         loadProteins()
         // Uncomment the following line to preserve selection between presentations
@@ -28,26 +32,21 @@ class ProteinTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    func loadProteins() {
-        proteins = []
-        
-    }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return proteins.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProtein", for: indexPath)
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProtein", for: indexPath) as! ProteinTableViewCell
+        networkCount += 1
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        cell.labID.text  = proteins[indexPath.row].ID
+        asyncLoad(cell: cell, row: indexPath.row)
         return cell
     }
 
@@ -66,20 +65,70 @@ class ProteinTableViewController: UITableViewController {
 
 }
 
+//  loadingand parsing data
+extension ProteinTableViewController {
+    
+    func loadProteins() {
+        proteins = []
+        let textUrl = URL(string: "https://projects.intra.42.fr/uploads/document/document/312/ligands.txt")
+        do {
+            let data = try String(contentsOf: textUrl!, encoding: .utf8)
+            let myStrings = data.components(separatedBy: .newlines)
+            for i in 0..<myStrings.count {
+                proteins.append(Protein(ID: String(describing: myStrings[i])))
+            }
+        } catch {
+            alert(title: "Loading error!", message: "Unable to reach \(textUrl!)")
+        }
+    }
+    
+    func asyncLoad(cell: ProteinTableViewCell, row: Int) {
+        
+        queue.async {
+
+            DispatchQueue.main.async {
+                cell.activityInd.startAnimating()
+            }
+            
+            do {
+                let data = try String(contentsOf: self.proteins[row].getURLentete(), encoding: .utf8)
+                DispatchQueue.main.async {
+                    cell.activityInd.stopAnimating()
+                    networkCount -= 1
+                    if networkCount == 0 {
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    }
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.alert(title: "Error", message: "Cannot access RCSB ligand data for " + self.proteins[row].ID)
+                    cell.activityInd.stopAnimating()
+                    networkCount -= 1
+                    if networkCount == 0 {
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    }
+                }
+            }
+
+        }
+    }
+    
+}
+
 //  "popup" d'erreur
 extension ProteinTableViewController {
     
-    func alert() {
-        let alert = UIAlertController(title: "", message: "", preferredStyle: .actionSheet)
+    func alert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
 //        let alert = UIAlertController(title: "", message: "", preferredStyle: .alert)
         
-        let OkAction        = UIAlertAction(title: "OK", style: .default, handler: handleOK)
-        let DeleteAction    = UIAlertAction(title: "Delete", style: .destructive, handler: handleDelete)
-        let CancelAction    = UIAlertAction(title: "Cancel", style: .cancel, handler: handleCancel)
+        let OkAction        = UIAlertAction(title: "OK", style: .default, handler: nil)
+//        let DeleteAction    = UIAlertAction(title: "Delete", style: .destructive, handler: handleDelete)
+//        let CancelAction    = UIAlertAction(title: "Cancel", style: .cancel, handler: handleCancel)
         
         alert.addAction(OkAction)
-        alert.addAction(DeleteAction)
-        alert.addAction(CancelAction)
+//        alert.addAction(DeleteAction)
+//        alert.addAction(CancelAction)
         
         self.present(alert, animated: true, completion: nil)
     }

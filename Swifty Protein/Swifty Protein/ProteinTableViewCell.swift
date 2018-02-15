@@ -11,6 +11,7 @@ import UIKit
 class ProteinTableViewCell: UITableViewCell {
 
     @IBOutlet weak var labID: UILabel!
+    @IBOutlet weak var activityInd: UIActivityIndicatorView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -12,19 +12,24 @@ import Foundation
 class Protein {
     
     var ID:         String      //  also the IDs given in the project txt file
-    var available:  Bool        //  if the protein is available on RCSB (download test)
-    var name:       String
-    var formula:    String
-    var atoms:      [Atom]
-    var conects:    [Conect]
+    var available:  Bool        = false     //  if the protein is available on RCSB (download test)
+    var name:       String      = ""
+    var formula:    String      = ""
+    var atoms:      [Atom]      = []
+    var conects:    [Conect]    = []
     
-    init (ID: String, available: Bool, name:String, formula: String, atoms: [Atom], conects: [Conect]) {
+//    init (ID: String, available: Bool, name:String, formula: String, atoms: [Atom], conects: [Conect]) {
+    init (ID: String) {
         self.ID         = ID
-        self.available  = available
-        self.name       = name
-        self.formula    = formula
-        self.atoms      = atoms
-        self.conects    = conects
+//        self.available  = available
+//        self.name       = name
+//        self.formula    = formula
+//        self.atoms      = atoms
+//        self.conects    = conects
+    }
+    
+    func getURLentete() -> URL {
+        return (URL(string: "https://files.rcsb.org/ligands/view/" + self.ID + ".cif"))!
     }
 }
 

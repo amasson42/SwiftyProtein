@@ -18,29 +18,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splashscreen" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jLD-L1-lNc">
-                                <rect key="frame" x="127" y="273" width="120" height="120"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="120" id="IsJ-dD-8kD"/>
-                                    <constraint firstAttribute="width" constant="120" id="vKg-3t-vQd"/>
-                                </constraints>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Beautiful app crafted with talent by amasson &amp; pdespres" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NkE-tu-TEe">
-                                <rect key="frame" x="58" y="425" width="255" height="41"/>
+                                <rect key="frame" x="60" y="425.5" width="255" height="41"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="255" id="hsa-LL-leY"/>
+                                    <constraint firstAttribute="width" constant="255" id="7bj-Nx-5WV"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swifty Proteins" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yo8-6S-OUi">
+                                <rect key="frame" x="129.5" y="347" width="115" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splashscreen" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jLD-L1-lNc">
+                                <rect key="frame" x="125" y="203" width="120" height="120"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="120" id="IsJ-dD-8kD"/>
+                                    <constraint firstAttribute="width" constant="120" id="vKg-3t-vQd"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="jLD-L1-lNc" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="FW5-DZ-iQK"/>
-                            <constraint firstItem="NkE-tu-TEe" firstAttribute="top" secondItem="jLD-L1-lNc" secondAttribute="bottom" constant="32" id="PHG-6z-cwW"/>
-                            <constraint firstItem="NkE-tu-TEe" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="-2" id="blY-Dh-F4A"/>
-                            <constraint firstItem="jLD-L1-lNc" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="pbJ-Vs-9OM"/>
+                            <constraint firstItem="jLD-L1-lNc" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-70.5" id="FW5-DZ-iQK"/>
+                            <constraint firstItem="NkE-tu-TEe" firstAttribute="top" secondItem="yo8-6S-OUi" secondAttribute="bottom" constant="57.5" id="eCq-jG-a4J"/>
+                            <constraint firstItem="yo8-6S-OUi" firstAttribute="top" secondItem="jLD-L1-lNc" secondAttribute="bottom" constant="24" id="kvf-v8-4JH"/>
+                            <constraint firstItem="NkE-tu-TEe" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="nTx-q7-FDr"/>
+                            <constraint firstItem="jLD-L1-lNc" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="-2.5" id="pbJ-Vs-9OM"/>
+                            <constraint firstItem="yo8-6S-OUi" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="rvp-PT-0FB"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

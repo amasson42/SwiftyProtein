@@ -10,7 +10,7 @@ import UIKit
 import LocalAuthentication
 
 class LoginViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         authenticate()
