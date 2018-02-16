@@ -9,7 +9,16 @@
 import Foundation
 
 // https://files.rcsb.org/ligands/view/**.xml
-class Protein {
+
+class ProteinHeader {
+    var ID:         String
+    
+    init(ID: String) {
+        self.ID = ID
+    }
+}
+
+class ProteinData {
     
     var ID:         String      //  also the IDs given in the project txt file
     var available:  Bool        = false     //  if the protein is available on RCSB (download test)
@@ -26,13 +35,6 @@ class Protein {
 //        self.formula    = formula
 //        self.atoms      = atoms
 //        self.conects    = conects
-    }
-    
-    func getURLentete() -> URL {
-        return (URL(string: "https://files.rcsb.org/ligands/view/" + self.ID + ".xml"))!
-    }
-    func getURLdata() -> URL {
-        return (URL(string: "https://files.rcsb.org/ligands/view/" + self.ID + "_ideal.pdb"))!
     }
     
 }

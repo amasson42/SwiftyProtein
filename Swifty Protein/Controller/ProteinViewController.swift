@@ -9,7 +9,9 @@
 import UIKit
 
 class ProteinViewController: UIViewController {
-
+    
+    var protein: (header: ProteinHeader, data: ProteinData)?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

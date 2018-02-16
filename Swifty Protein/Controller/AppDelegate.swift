@@ -8,14 +8,28 @@
 
 import UIKit
 
+public var networkCount: Int   = 0 {
+    didSet {
+        DispatchQueue.main.async {
+            if networkCount == 0 {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            } else {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = true
+            }
+        }
+    }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var appViewController: UIViewController?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        self.appViewController = self.window!.rootViewController
+        self.lockMainViewController()
         return true
     }
 
@@ -32,6 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        self.lockMainViewController()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -43,6 +58,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func lockMainViewController() {
+        guard !(self.window!.rootViewController is LoginViewController) else {
+            return
+        }
+        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let lockView: LoginViewController = mainStoryboard.instantiateViewController(withIdentifier: "First") as! LoginViewController
+        self.window!.rootViewController = lockView
+    }
+    
+    func unlockMainViewController() {
+        self.window!.rootViewController = self.appViewController
+    }
 }
 

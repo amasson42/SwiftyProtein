@@ -29,9 +29,7 @@ class LoginViewController: UIViewController {
                 if success {
                     DispatchQueue.main.async {
                         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                        let innerPage: UINavigationController = mainStoryboard.instantiateViewController(withIdentifier:"NavToList") as! UINavigationController
-                        appDelegate.window?.rootViewController = innerPage
+                        appDelegate.unlockMainViewController()
                     }
                 } else {
                     DispatchQueue.main.async {
