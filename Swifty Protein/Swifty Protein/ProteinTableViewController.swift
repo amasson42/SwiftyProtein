@@ -12,9 +12,11 @@ let qos                 = DispatchQoS.background.qosClass
 let queue               = DispatchQueue.global(qos: qos)
 var networkCount: Int   = 0
 
-class ProteinTableViewController: UITableViewController,XMLParserDelegate {
+class ProteinTableViewController: UITableViewController {
 
-    var proteins: [Protein] = []
+    var proteins: [Protein]     = []
+    var parserGetIt: Bool       = false
+    var parserElement:String    = ""
     @IBOutlet var tabProtein: UITableView!
     
     override func viewDidLoad() {
@@ -46,7 +48,6 @@ class ProteinTableViewController: UITableViewController,XMLParserDelegate {
         networkCount += 1
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         cell.labID.text  = proteins[indexPath.row].ID
-        asyncLoad(cell: cell, row: indexPath.row)
         return cell
     }
 
@@ -75,27 +76,30 @@ extension ProteinTableViewController {
             let data = try String(contentsOf: textUrl!, encoding: .utf8)
             let myStrings = data.components(separatedBy: .newlines)
             for i in 0..<myStrings.count {
-                proteins.append(Protein(ID: String(describing: myStrings[i])))
+                if myStrings[i] != "" {
+                    proteins.append(Protein(ID: String(describing: myStrings[i])))
+//                    asyncLoad(row: i)
+                }
             }
         } catch {
             alert(title: "Loading error!", message: "Unable to reach \(textUrl!)")
         }
     }
     
-    func asyncLoad(cell: ProteinTableViewCell, row: Int) {
+    func asyncLoad(row: Int) {
         
         queue.async {
 
-            DispatchQueue.main.async {
-                cell.activityInd.startAnimating()
-            }
+//            DispatchQueue.main.async {
+//                cell.activityInd.startAnimating()
+//            }
             
             let parser = XMLParser(contentsOf: self.proteins[row].getURLentete())
             parser?.delegate = self
             if (parser?.parse())! {
-
                 DispatchQueue.main.async {
-                    cell.activityInd.stopAnimating()
+                 
+//                    cell.activityInd.stopAnimating()
                     networkCount -= 1
                     if networkCount == 0 {
                         UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -104,7 +108,8 @@ extension ProteinTableViewController {
             } else {
                 DispatchQueue.main.async {
                     self.alert(title: "Error", message: "Cannot access RCSB ligand data for " + self.proteins[row].ID)
-                    cell.activityInd.stopAnimating()
+                    print("error \(row)")
+//                    cell.activityInd.stopAnimating()
                     networkCount -= 1
                     if networkCount == 0 {
                         UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -114,15 +119,34 @@ extension ProteinTableViewController {
 
         }
     }
+
+}
+
+extension ProteinTableViewController: XMLParserDelegate {
     
-    func parser(parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+    func parser(_ parser: XMLParser,
+                didStartElement elementName: String,
+                namespaceURI: String?,
+                qualifiedName qName: String?,
+                attributes attributeDict: [String : String] = [:]) {
         if elementName == "PDBx:name" {
-//            if let name = attributeDict["name"] {
-//                tempTag.name = name;
-//            }
-            print(elementName,qName,attributeDict)
+            parserElement = "name"
+            parserGetIt = true
         }
     }
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        if parserGetIt {
+            print("\(parserElement) \(string)")
+            parserGetIt = false
+        }
+    }
+//    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+//        print("Did end element: \(elementName)")
+//    }
+//    func parserDidEndDocument(_ parser: XMLParser) {
+//        print("Completed parsing document")
+//    }
+    
 }
 
 //  error "popup"
