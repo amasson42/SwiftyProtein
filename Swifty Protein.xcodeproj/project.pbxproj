@@ -18,6 +18,7 @@
 		35B2D2D12035994000B94B10 /* ProteinClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2D2D02035994000B94B10 /* ProteinClass.swift */; };
 		F64DCBF42036FB3F00887BCE /* ProteinManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64DCBF32036FB3F00887BCE /* ProteinManager.swift */; };
 		F64DCBF62037402800887BCE /* RandomUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64DCBF52037402800887BCE /* RandomUtils.swift */; };
+		F6E8A9BE203AF69800798146 /* LigandsNames.txt in Resources */ = {isa = PBXBuildFile; fileRef = F6E8A9BD203AF69800798146 /* LigandsNames.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		35B2D2D02035994000B94B10 /* ProteinClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinClass.swift; sourceTree = "<group>"; };
 		F64DCBF32036FB3F00887BCE /* ProteinManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinManager.swift; sourceTree = "<group>"; };
 		F64DCBF52037402800887BCE /* RandomUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomUtils.swift; sourceTree = "<group>"; };
+		F6E8A9BD203AF69800798146 /* LigandsNames.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LigandsNames.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 				35B2D2BF2035909500B94B10 /* Assets.xcassets */,
 				35B2D2C12035909500B94B10 /* LaunchScreen.storyboard */,
 				35B2D2C42035909500B94B10 /* Info.plist */,
+				F6E8A9BD203AF69800798146 /* LigandsNames.txt */,
 			);
 			path = "Swifty Protein";
 			sourceTree = "<group>";
@@ -176,6 +179,7 @@
 				35B2D2C32035909500B94B10 /* LaunchScreen.storyboard in Resources */,
 				35B2D2C02035909500B94B10 /* Assets.xcassets in Resources */,
 				35B2D2BE2035909500B94B10 /* Main.storyboard in Resources */,
+				F6E8A9BE203AF69800798146 /* LigandsNames.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,8 +335,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8Z3VWG99PL;
+				DEVELOPMENT_TEAM = V82658887T;
 				INFOPLIST_FILE = "Swifty Protein/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "-2.Swifty-Protein";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -346,8 +351,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8Z3VWG99PL;
+				DEVELOPMENT_TEAM = V82658887T;
 				INFOPLIST_FILE = "Swifty Protein/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "-2.Swifty-Protein";
 				PRODUCT_NAME = "$(TARGET_NAME)";

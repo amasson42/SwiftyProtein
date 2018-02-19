@@ -8,7 +8,7 @@
 
 import UIKit
 
-public var networkCount: Int   = 0 {
+public var networkCount: Int = 0 {
     didSet {
         DispatchQueue.main.async {
             if networkCount == 0 {
