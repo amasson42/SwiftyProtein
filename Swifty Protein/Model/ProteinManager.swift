@@ -8,33 +8,27 @@
 
 import Foundation
 
+let qos                 = DispatchQoS.background.qosClass
+let queue               = DispatchQueue.global(qos: qos)
+
 protocol ProteinManagerDelegate: class {
-    func proteinManager(_ proteinManager: ProteinManager, finishedLoadingHeader header: ProteinHeader)
-    func proteinManager(_ proteinManager: ProteinManager, finishedLoadingData data: ProteinData)
-    func proteinManager(_ proteinManager: ProteinManager, error: ProteinManager.LoadingError, loading id: String)
+    func proteinManager(_ proteinManager: ProteinParser, finishedLoadingHeader header: ProteinHeader)
+    func proteinManager(_ proteinManager: ProteinParser, finishedLoadingData data: ProteinData)
+    func proteinManager(_ proteinManager: ProteinParser, error: ProteinParser.LoadingError, loading id: String)
 }
 
 extension ProteinManagerDelegate {
-    func proteinManager(_ proteinManager: ProteinManager, finishedLoadingHeader header: ProteinHeader) {}
-    func proteinManager(_ proteinManager: ProteinManager, finishedLoadingData data: ProteinData) {}
-    func proteinManager(_ proteinManager: ProteinManager, error: ProteinManager.LoadingError, loading id: String) {}
+    func proteinManager(_ proteinManager: ProteinParser, finishedLoadingHeader header: ProteinHeader) {}
+    func proteinManager(_ proteinManager: ProteinParser, finishedLoadingData data: ProteinData) {}
+    func proteinManager(_ proteinManager: ProteinParser, error: ProteinParser.LoadingError, loading id: String) {}
 }
 
-class ProteinManager: NSObject {
+class ProteinManager: ProteinParser {
     
-    enum LoadingError: Error {
-        // TODO: add other possibles errors
-        case unexistingID
-    }
     
-    weak var delegate: ProteinManagerDelegate?
     
     private override init () {}
     static let shared: ProteinManager = ProteinManager()
-    
-    // MARK: Parser values
-    var parserElement: String = ""
-    var parserGetIt: Bool = false
     
     /** the names of all the protein we can display. It's the content of the provided text file for the project */
     public static let allProteinIDs: [String] = {
@@ -46,13 +40,19 @@ class ProteinManager: NSObject {
     }()
     
     func loadProteinHeader(id: String) {
-        guard let parser = XMLParser(contentsOf: self.getURLHeader(ofID: id)) else {
-            self.delegate?.proteinManager(self, error: .unexistingID, loading: id)
-            return
+        queue.async {
+            guard let parser = XMLParser(contentsOf: self.getURLHeader(ofID: id)) else {
+                self.delegate?.proteinManager(self, error: .unexistingID, loading: id)
+                return
+            }
+ 
+            parser.delegate = self
+            parser.parse()
+        //            DispatchQueue.main.async {
+        //            }
         }
-        // TODO: load and parse the protein header
-        let header = ProteinHeader(ID: id)
-        self.delegate?.proteinManager(self, finishedLoadingHeader: header)
+//        let header = ProteinHeader(ID: id)
+        
     }
     
     /** load a protein with the given name from the text file */
@@ -72,29 +72,69 @@ class ProteinManager: NSObject {
     
 }
 
-extension ProteinManager: XMLParserDelegate {
+class ProteinParser: NSObject, XMLParserDelegate {
+    
+    weak var delegate: ProteinManagerDelegate?
+    
+    enum LoadingError: Error {
+        // TODO: add other possibles errors
+        case unexistingID
+    }
+    
+    var parserElement: String   = ""
+    var parserGetIt: Bool       = false
+    var id: String?             = nil
+    var name: String            = ""
+    var formula: String         = ""
     
     func parser(_ parser: XMLParser,
                 didStartElement elementName: String,
                 namespaceURI: String?,
                 qualifiedName qName: String?,
                 attributes attributeDict: [String : String] = [:]) {
-        if elementName == "PDBx:name" {
+        
+        switch elementName {
+        case "PDBx:chem_comp":
+            self.id = attributeDict["id"]
+        case "PDBx:name":
             parserElement = "name"
             parserGetIt = true
+        case "PDBx:formula":
+            parserElement = "formula"
+            parserGetIt = true
+        default:
+            break
         }
     }
+    
     func parser(_ parser: XMLParser, foundCharacters string: String) {
         if parserGetIt {
-            print("\(parserElement) \(string)")
-            parserGetIt = false
+            switch parserElement {
+            case "name":
+                name = string
+            case "formula":
+                formula = string
+            default:
+                break
+            }
         }
     }
-    //    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-    //        print("Did end element: \(elementName)")
-    //    }
-    //    func parserDidEndDocument(_ parser: XMLParser) {
-    //        print("Completed parsing document")
-    //    }
+    
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+        if parserGetIt && elementName == "PDBx:formula" {
+            let currentProt = ProteinHeader(ID: self.id!)
+            currentProt.name        = name
+            currentProt.formula     = formula
+            self.delegate?.proteinManager(self, finishedLoadingHeader: currentProt)
+            parserGetIt             = false
+//            print(currentProt.ID, currentProt.name, currentProt.formula)
+            name = ""
+            formula = ""
+        }
+    }
+    
+    func parserDidEndDocument(_ parser: XMLParser) {
+        
+    }
     
 }
