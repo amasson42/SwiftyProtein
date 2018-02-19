@@ -61,9 +61,17 @@ extension ProteinTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProtein", for: indexPath) as! ProteinTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CellProtein", for: indexPath) as! ProteinTableViewCell
         
-        // TODO: setup cell
+        if let header = self.proteinsHeaders[indexPath.row] {
+            cell.nameLabel.text = "header.name"
+            cell.formulaLabel.text = "header.formula"
+            cell.activityIndicator.isHidden = true
+        } else {
+            cell.nameLabel.text = ProteinManager.allProteinIDs[indexPath.row]
+            cell.formulaLabel.text = "Loading..."
+            cell.activityIndicator.startAnimating()
+        }
         
         return cell
     }
