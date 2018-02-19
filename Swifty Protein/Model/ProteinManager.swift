@@ -11,21 +11,7 @@ import Foundation
 let qos                 = DispatchQoS.background.qosClass
 let queue               = DispatchQueue.global(qos: qos)
 
-protocol ProteinManagerDelegate: class {
-    func proteinManager(_ proteinManager: ProteinParser, finishedLoadingHeader header: ProteinHeader)
-    func proteinManager(_ proteinManager: ProteinParser, finishedLoadingData data: ProteinData)
-    func proteinManager(_ proteinManager: ProteinParser, error: ProteinParser.LoadingError, loading id: String)
-}
-
-extension ProteinManagerDelegate {
-    func proteinManager(_ proteinManager: ProteinParser, finishedLoadingHeader header: ProteinHeader) {}
-    func proteinManager(_ proteinManager: ProteinParser, finishedLoadingData data: ProteinData) {}
-    func proteinManager(_ proteinManager: ProteinParser, error: ProteinParser.LoadingError, loading id: String) {}
-}
-
 class ProteinManager: ProteinParser {
-    
-    
     
     private override init () {}
     static let shared: ProteinManager = ProteinManager()
@@ -39,10 +25,17 @@ class ProteinManager: ProteinParser {
         return fileContent.components(separatedBy: .newlines)
     }()
     
-    func loadProteinHeader(id: String) {
+    func loadProteinHeader(id: String, completion: @escaping (ProteinHeader?, ProteinParser.LoadingError?) -> ()) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            let header = ProteinHeader(ID: id)
+            header.name = "name\(id)"
+            header.formula = "formula\(id)"
+            completion(header, nil)
+        }
+        return;
         queue.async {
             guard let parser = XMLParser(contentsOf: self.getURLHeader(ofID: id)) else {
-                self.delegate?.proteinManager(self, error: .unexistingID, loading: id)
+                completion(nil, .unexistingID)
                 return
             }
  
@@ -56,10 +49,13 @@ class ProteinManager: ProteinParser {
     }
     
     /** load a protein with the given name from the text file */
-    func loadProteinData(header: ProteinHeader) {
+    func loadProteinData(header: ProteinHeader, completion: @escaping (ProteinData?, ProteinParser.LoadingError?) -> ()) {
         // TODO: load and parse protein from the name
-        let data = ProteinData(ID: header.ID)
-        self.delegate?.proteinManager(self, finishedLoadingData: data)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let data = ProteinData(ID: header.ID)
+            completion(data, nil)
+        }
+
     }
     
     func getURLHeader(ofID ID: String) -> URL {
@@ -73,8 +69,6 @@ class ProteinManager: ProteinParser {
 }
 
 class ProteinParser: NSObject, XMLParserDelegate {
-    
-    weak var delegate: ProteinManagerDelegate?
     
     enum LoadingError: Error {
         // TODO: add other possibles errors
@@ -125,7 +119,6 @@ class ProteinParser: NSObject, XMLParserDelegate {
             let currentProt = ProteinHeader(ID: self.id!)
             currentProt.name        = name
             currentProt.formula     = formula
-            self.delegate?.proteinManager(self, finishedLoadingHeader: currentProt)
             parserGetIt             = false
 //            print(currentProt.ID, currentProt.name, currentProt.formula)
             name = ""

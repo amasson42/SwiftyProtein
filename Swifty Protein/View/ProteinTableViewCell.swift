@@ -25,4 +25,16 @@ class ProteinTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    func takeValue(fromProteinHeader header: ProteinHeader) {
+        self.nameLabel.text = header.name
+        self.formulaLabel.text = header.formula
+        self.activityIndicator.isHidden = true
+    }
+    
+    func takeValue(fromLoadingId id: String) {
+        self.nameLabel.text = "\(id)"
+        self.formulaLabel.text = "Loading..."
+        self.activityIndicator.startAnimating()
+    }
+    
 }

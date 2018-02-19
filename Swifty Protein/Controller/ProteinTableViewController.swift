@@ -15,25 +15,16 @@ class ProteinTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        ProteinManager.shared.delegate = self
         tableView.delegate     = self
         tableView.dataSource   = self
         tableView.rowHeight    = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 40
-        self.loadProteins()
+        self.proteinsHeaders = Array<ProteinHeader?>(repeating: nil, count: ProteinManager.allProteinIDs.count)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    func loadProteins() {
-        let proteinsIDs = ProteinManager.allProteinIDs
-        self.proteinsHeaders = Array<ProteinHeader?>(repeating: nil, count: proteinsIDs.count)
-        for id in proteinsIDs {
-            ProteinManager.shared.loadProteinHeader(id: id)
-        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -64,13 +55,23 @@ extension ProteinTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CellProtein", for: indexPath) as! ProteinTableViewCell
         
         if let header = self.proteinsHeaders[indexPath.row] {
-            cell.nameLabel.text = "header.name"
-            cell.formulaLabel.text = "header.formula"
-            cell.activityIndicator.isHidden = true
+            cell.takeValue(fromProteinHeader: header)
         } else {
-            cell.nameLabel.text = ProteinManager.allProteinIDs[indexPath.row]
-            cell.formulaLabel.text = "Loading..."
-            cell.activityIndicator.startAnimating()
+            let id = ProteinManager.allProteinIDs[indexPath.row]
+            cell.takeValue(fromLoadingId: id)
+            ProteinManager.shared.loadProteinHeader(id: id) {
+                (header, error) in
+                guard let header = header else {
+                    if let error = error {
+                        print(error)
+                    } else {
+                        print("no header")
+                    }
+                    return
+                }
+                self.proteinsHeaders[indexPath.row] = header
+                cell.takeValue(fromProteinHeader: header)
+            }
         }
         
         return cell
@@ -78,29 +79,20 @@ extension ProteinTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let header = self.proteinsHeaders[indexPath.row] {
-            ProteinManager.shared.loadProteinData(header: header)
+            ProteinManager.shared.loadProteinData(header: header) {
+                (data, error) in
+                guard let data = data else {
+                    if let error = error {
+                        print(error)
+                    } else {
+                        print("no data")
+                    }
+                    return
+                }
+                self.proteinData = data
+                self.performSegue(withIdentifier: "segueToProtein", sender: tableView)
+            }
         }
-    }
-    
-}
-
-extension ProteinTableViewController: ProteinManagerDelegate {
-    
-    func proteinManager(_ proteinManager: ProteinManager, finishedLoadingHeader header: ProteinHeader) {
-        if let index = ProteinManager.allProteinIDs.index(of: header.ID) {
-            self.proteinsHeaders[index] = header
-            self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-        }
-    }
-    
-    func proteinManager(_ proteinManager: ProteinManager, finishedLoadingData data: ProteinData) {
-        self.proteinData = data
-        self.performSegue(withIdentifier: "segueToProtein", sender: self)
-    }
-    
-    func proteinManager(_ proteinManager: ProteinManager, error: ProteinManager.LoadingError, loading id: String) {
-        print("error: \(error) while loading \(id)")
-        self.alert(title: "Error", message: "can't load \(id)")
     }
     
 }
