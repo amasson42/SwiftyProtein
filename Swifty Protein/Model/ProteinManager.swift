@@ -11,10 +11,21 @@ import Foundation
 let qos                 = DispatchQoS.background.qosClass
 let queue               = DispatchQueue.global(qos: qos)
 
-class ProteinManager: ProteinParser {
+class ProteinManager: NSObject {
     
     private override init () {}
     static let shared: ProteinManager = ProteinManager()
+    var completionHandler: ((ProteinHeader?, ProteinManager.LoadingError?) -> ())?
+    enum LoadingError: Error {
+        // TODO: add other possibles errors
+        case unexistingID
+    }
+    
+    var parserElement: String   = ""
+    var parserGetIt: Bool       = false
+    var id: String?             = nil
+    var name: String            = ""
+    var formula: String         = ""
     
     /** the names of all the protein we can display. It's the content of the provided text file for the project */
     public static let allProteinIDs: [String] = {
@@ -25,31 +36,51 @@ class ProteinManager: ProteinParser {
         return fileContent.components(separatedBy: .newlines)
     }()
     
-    func loadProteinHeader(id: String, completion: @escaping (ProteinHeader?, ProteinParser.LoadingError?) -> ()) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            let header = ProteinHeader(ID: id)
-            header.name = "name\(id)"
-            header.formula = "formula\(id)"
-            completion(header, nil)
-        }
-        return;
+//    private func loadHeader(id: String, completion: @escaping (ProteinHeader?, ProteinParser.LoadingError?) -> ()) {
+//        guard let parser = XMLParser(contentsOf: self.getURLHeader(ofID: id)) else {
+//            completion(nil, .unexistingID)
+//            return
+//        }
+//        let header = ProteinHeader(ID: id)
+//        completion(header, nil)
+//    }
+//
+//    func loadProteinHeader(id: String) {
+//        loadHeader(id: id) { (proteinHeader, loadingError) in
+//            if loadingError == nil {
+//                let parser = XMLParser(contentsOf: self.getURLHeader(ofID: id))!
+//                parser.delegate = self
+//                parser.parse()
+//                proteinHeader?.name        = self.name
+//                proteinHeader?.formula     = self.formula
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+//
+//                }
+//            }
+//        }
+//    }
+
+    func loadProteinHeader(id: String, completion: @escaping (ProteinHeader?, ProteinManager.LoadingError?) -> ()) {
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+//            let header = ProteinHeader(ID: id)
+//            header.name = "name\(id)"
+//            header.formula = "formula\(id)"
+//            completion(header, nil)
+//        }
+        completionHandler = completion
         queue.async {
             guard let parser = XMLParser(contentsOf: self.getURLHeader(ofID: id)) else {
                 completion(nil, .unexistingID)
                 return
             }
- 
             parser.delegate = self
             parser.parse()
-        //            DispatchQueue.main.async {
-        //            }
         }
-//        let header = ProteinHeader(ID: id)
-        
+
     }
     
     /** load a protein with the given name from the text file */
-    func loadProteinData(header: ProteinHeader, completion: @escaping (ProteinData?, ProteinParser.LoadingError?) -> ()) {
+    func loadProteinData(header: ProteinHeader, completion: @escaping (ProteinData?, ProteinManager.LoadingError?) -> ()) {
         // TODO: load and parse protein from the name
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             let data = ProteinData(ID: header.ID)
@@ -68,18 +99,7 @@ class ProteinManager: ProteinParser {
     
 }
 
-class ProteinParser: NSObject, XMLParserDelegate {
-    
-    enum LoadingError: Error {
-        // TODO: add other possibles errors
-        case unexistingID
-    }
-    
-    var parserElement: String   = ""
-    var parserGetIt: Bool       = false
-    var id: String?             = nil
-    var name: String            = ""
-    var formula: String         = ""
+extension ProteinManager: XMLParserDelegate {
     
     func parser(_ parser: XMLParser,
                 didStartElement elementName: String,
@@ -105,9 +125,12 @@ class ProteinParser: NSObject, XMLParserDelegate {
         if parserGetIt {
             switch parserElement {
             case "name":
+//                print("name '\(string)'")
                 name = string
+                parserElement = ""
             case "formula":
                 formula = string
+                parserElement = ""
             default:
                 break
             }
@@ -119,10 +142,12 @@ class ProteinParser: NSObject, XMLParserDelegate {
             let currentProt = ProteinHeader(ID: self.id!)
             currentProt.name        = name
             currentProt.formula     = formula
+            completionHandler!(currentProt, nil)
             parserGetIt             = false
-//            print(currentProt.ID, currentProt.name, currentProt.formula)
+            print(currentProt.ID, currentProt.name, currentProt.formula)
             name = ""
             formula = ""
+
         }
     }
     
