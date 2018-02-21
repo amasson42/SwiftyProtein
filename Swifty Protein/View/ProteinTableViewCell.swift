@@ -37,4 +37,9 @@ class ProteinTableViewCell: UITableViewCell {
         self.activityIndicator.startAnimating()
     }
     
+    func takeErrorValue() {
+        self.nameLabel.text = ""
+        self.formulaLabel.text = "loading error"
+        self.activityIndicator.isHidden = true
+    }
 }

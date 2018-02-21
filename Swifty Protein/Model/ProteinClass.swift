@@ -7,64 +7,82 @@
 //
 
 import Foundation
+import UIKit
 
 // https://files.rcsb.org/ligands/view/**.xml
 
 class ProteinHeader {
     
-    var ID:         String
-    var available:  Bool        = false     //  if the protein is available on RCSB (download test)
-    var name:       String      = ""
-    var formula:    String      = ""
+    var id: String
+    var name: String = ""
+    var formula: String = ""
+    var type: String = ""
+    var initialDate: Date = Date()
+    var modifiedDate: Date = Date()
+    var weight: Float = 0.0
     
-    init(ID: String) {
-        self.ID         = ID
+    init(id: String) {
+        self.id = id
     }
 }
 
 class ProteinData {
     
-    var ID:         String      //  also the IDs given in the project txt file
-    var atoms:      [Atom]      = []
-    var conects:    [Conect]    = []
+    static let atomColors: [String: UIColor] = [
+        "H": .white,
+        "C": .black,
+        "N": UIColor.blue, // dark blue
+        "O": .red,
+        "F": .green,
+        "Cl": .green,
+        "Br": UIColor.red, // dark red
+        "I": UIColor.magenta, // dark violet
+        "He": .cyan,
+        "Ne": .cyan,
+        "Ar": .cyan,
+        "Xe": .cyan,
+        "Kr": .cyan,
+        "P": .orange,
+        "S": .yellow,
+        "B": UIColor.purple, // pink salmon
+        "Li": .magenta,
+        "Na": .magenta,
+        "K": .magenta,
+        "Rb": .magenta,
+        "Cs": .magenta,
+        "Fr": .magenta,
+        "Be": UIColor(rgbValues: 14, 117, 15),
+        "Mg": UIColor(rgbValues: 14, 117, 15),
+        "Ca": UIColor(rgbValues: 14, 117, 15),
+        "Sr": UIColor(rgbValues: 14, 117, 15),
+        "Ba": UIColor(rgbValues: 14, 117, 15),
+        "Ra": UIColor(rgbValues: 14, 117, 15),
+        "Ti": .gray,
+        "Fe": UIColor.orange, // dark orange
+    ]
+    static let unknownColor = UIColor.purple
     
-    init (ID: String) {
-        self.ID         = ID
+    unowned let header: ProteinHeader
+    var atoms: [Atom] = []
+    
+    init (header: ProteinHeader) {
+        self.header = header
     }
     
 }
 
 // https://files.rcsb.org/ligands/view/**_ideal.pdb
-// all atoms are linked in the serial order
 class Atom {
+    var id: Int
+    var identifier: String = ""
+    var symbol: String = ""
+    var x: Float = 0.0
+    var y: Float = 0.0
+    var z: Float = 0.0
+    var conects: [Int] = []
     
-    var serial:     Int
-    var symbol:     String
-    var resName:    String      // TODO: useful for new chain?
-    var chainID:    String      // if chainID changes, a new chain of links begins
-    var x:          Float
-    var y:          Float
-    var z:          Float
-    
-    init (serial: Int, symbol: String, resName: String, chainID: String, x: Float, y: Float, z: Float) {
-        self.serial     = serial
-        self.symbol     = symbol
-        self.resName    = resName
-        self.chainID    = chainID
-        self.x          = x
-        self.y          = y
-        self.z          = z
+    init(id: Int) {
+        self.id = id
     }
 }
 
-// supplementary links between atoms. From 'origin' to 'target(s)'. Atoms are identified by their serial
-class Conect {
-    
-    var origin:     Int
-    var targets:    [Int]
-    
-    init (origin: Int, targets: [Int]) {
-        self.origin     = origin
-        self.targets    = targets
-    }
-}

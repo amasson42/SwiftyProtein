@@ -11,7 +11,9 @@ import UIKit
 class ProteinTableViewController: UITableViewController {
     
     var proteinsHeaders: [ProteinHeader?] = []
-    var proteinData: ProteinData?
+    
+    weak var selectedHeader: ProteinHeader?
+    var selectedData: ProteinData?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,9 +32,8 @@ class ProteinTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "segueToProtein" {
             guard let vc = segue.destination as? ProteinViewController,
-                let row = sender as? Int,
-                let proteinHeader = self.proteinsHeaders[row],
-                let proteinData = self.proteinData else {
+                let proteinHeader = self.selectedHeader,
+                let proteinData = self.selectedData else {
                     return
             }
             vc.protein = (proteinHeader, proteinData)
@@ -63,6 +64,9 @@ extension ProteinTableViewController {
                 (header, error) in
                 guard let header = header else {
                     if let error = error {
+                        DispatchQueue.main.async {
+                            cell.takeErrorValue()
+                        }
                         print(error)
                     } else {
                         print("no header")
@@ -70,7 +74,9 @@ extension ProteinTableViewController {
                     return
                 }
                 self.proteinsHeaders[indexPath.row] = header
-                cell.takeValue(fromProteinHeader: header)
+                DispatchQueue.main.async {
+                    cell.takeValue(fromProteinHeader: header)
+                }
             }
         }
         
@@ -79,6 +85,7 @@ extension ProteinTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let header = self.proteinsHeaders[indexPath.row] {
+            self.selectedHeader = header
             ProteinManager.shared.loadProteinData(header: header) {
                 (data, error) in
                 guard let data = data else {
@@ -89,8 +96,10 @@ extension ProteinTableViewController {
                     }
                     return
                 }
-                self.proteinData = data
-                self.performSegue(withIdentifier: "segueToProtein", sender: tableView)
+                self.selectedData = data
+                DispatchQueue.main.async {
+                    self.performSegue(withIdentifier: "segueToProtein", sender: tableView)
+                }
             }
         }
     }
