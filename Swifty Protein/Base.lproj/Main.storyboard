@@ -44,7 +44,7 @@
                                 <rect key="frame" x="0.0" y="72" width="375" height="82"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yDP-4h-V5Q" id="SLM-VQ-Fvf">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="82"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="81.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="k8h-bg-Acz">
@@ -96,6 +96,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Ligands" id="2tx-4j-Vfv"/>
                     <connections>
+                        <outlet property="searchBar" destination="De3-j1-NMf" id="i1B-WT-qlm"/>
                         <segue destination="cp6-yW-oS0" kind="show" identifier="segueToProtein" id="gbx-pS-QoZ"/>
                     </connections>
                 </tableViewController>

@@ -21,6 +21,8 @@ class ProteinTableViewController: UITableViewController {
     weak var selectedHeader: ProteinHeader?
     var selectedData: ProteinData?
     
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate     = self
