@@ -34,13 +34,14 @@ class ProteinTableViewCell: UITableViewCell {
     }
     
     func takeValue(fromLoadingId id: String) {
-        self.idLabel.text       = "\(id)"
+        self.idLabel.text       = id
         self.nameLabel.text     = "Loading..."
         self.formulaLabel.text  = ""
         self.activityIndicator.startAnimating()
     }
     
-    func takeErrorValue() {
+    func takeErrorValue(withId id: String) {
+        self.idLabel.text       = id
         self.nameLabel.text     = ""
         self.formulaLabel.text  = "loading error"
         self.activityIndicator.isHidden = true

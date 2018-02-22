@@ -12,6 +12,8 @@ import SceneKit
 class ProteinViewController: UIViewController {
     
     @IBOutlet weak var proteinView: GraphNodeView!
+    @IBOutlet weak var headerDisplayer: ProteinHeaderDisplayerView!
+    @IBOutlet weak var atomDisplayerView: AtomDisplayerView!
     
     var protein: (header: ProteinHeader, data: ProteinData)?
     var atoms: [String: Atom] = [:]
@@ -19,6 +21,11 @@ class ProteinViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.headerDisplayer.header = protein?.header
+        self.headerDisplayer.shown = false
+        self.atomDisplayerView.shown = false
+        self.navigationItem.title = protein?.header.id
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "model", style: .plain, target: nil, action: nil)
         self.proteinView.sceneBackground = UIColor.lightGray
         if let data = self.protein?.data {
             for atom in data.atoms {
@@ -39,6 +46,12 @@ class ProteinViewController: UIViewController {
         self.present(shareVC, animated: true, completion: nil)
     }
     
+    @IBAction func btShowProteinHeader(_ sender: Any) {
+        if self.atomDisplayerView.shown {
+            self.atomDisplayerView.animate(shown: false)
+        }
+        self.headerDisplayer.animate(shown: !self.headerDisplayer.shown)
+    }
 }
 
 extension ProteinViewController: GraphNodeViewDataSource {
@@ -58,7 +71,7 @@ extension ProteinViewController: GraphNodeViewDataSource {
             return (self as GraphNodeViewDataSource).graphNodeView(graphNodeView, modelForNodeNamed: name)
         }
         let sphere = SCNSphere(radius: CGFloat(atom.radius) / 2)
-        sphere.materials.first?.diffuse.contents = ProteinData.atomColors[atom.symbol] ?? UIColor.lightGray
+        sphere.materials.first?.diffuse.contents = AtomManager.shared.atomColors[atom.symbol] ?? AtomManager.shared.unknownColor
         let node = SCNNode(geometry: sphere)
         return node
     }
@@ -93,7 +106,7 @@ extension ProteinViewController: GraphNodeViewDataSource {
         }
         return GraphNodeView.LinkProperty(lineShape: .round,
                                           lineWidth: 0.15,
-                                          color: ProteinData.atomColors[atom.symbol] ?? UIColor.lightGray,
+                                          color: AtomManager.shared.atomColors[atom.symbol] ?? AtomManager.shared.unknownColor,
                                           arrowShaped: false,
                                           startingDistance: 0.0, endingDistance: 0.5)
     }
@@ -101,11 +114,142 @@ extension ProteinViewController: GraphNodeViewDataSource {
 
 extension ProteinViewController: GraphNodeViewDelegate {
     
-    func graphNodeView(_ graphNodeView: GraphNodeView, selectedNodeNamed name: String) {
-        guard let atom = self.atoms[name] else {
+    func graphNodeView(_ graphNodeView: GraphNodeView, selectedNodeNamed name: String?) {
+        if self.headerDisplayer.shown {
+            self.headerDisplayer.animate(shown: false)
+        }
+        if let name = name {
+            guard let atom = self.atoms[name] else {
+                return
+            }
+            self.atomDisplayerView.atom = atom
+            self.atomDisplayerView.animate(shown: true)
+        } else {
+            if self.atomDisplayerView.shown {
+                self.atomDisplayerView.animate(shown: false)
+            }
+        }
+    }
+    
+}
+
+// TODO: Put those shits in other files
+
+class ProteinHeaderDisplayerView: UIView {
+    
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var formulaLabel: UILabel!
+    @IBOutlet weak var weightLabel: UILabel!
+    @IBOutlet weak var typeLabel: UILabel!
+    @IBOutlet weak var initialDateLabel: UILabel!
+    @IBOutlet weak var modifiedDateLabel: UILabel!
+    
+    weak var header: ProteinHeader? {
+        didSet {
+            self.reloadInfos()
+        }
+    }
+    
+    var shown: Bool = false {
+        didSet {
+            if self.shown {
+                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            } else {
+                self.transform = CGAffineTransform(translationX: 0, y: -self.bounds.height / 2)
+                self.transform = self.transform.scaledBy(x: 1.0, y: 0.001)
+            }
+        }
+    }
+    
+    func animate(shown: Bool) {
+        UIView.animate(withDuration: 0.4,
+                       delay: 0.1,
+                       options: .curveEaseInOut,
+                       animations: {
+                        self.shown = shown
+        })
+    }
+    
+    func reloadInfos() {
+        guard let header = self.header else {
             return
         }
+        self.nameLabel.text = "name: \(header.name)"
+        self.formulaLabel.text = "formula: \(header.formula)"
+        self.weightLabel.text = "weight: \(header.weight)"
+        self.typeLabel.text = "type: \(header.type)"
+        self.initialDateLabel.text = "created in \(header.initialDate.toString(withFormat: "yyyy"))"
+        if header.initialDate != header.modifiedDate {
+            self.modifiedDateLabel.text = "modified in \(header.modifiedDate.toString(withFormat: "yyyy"))"
+        } else {
+            self.modifiedDateLabel.text = ""
+        }
+    }
+    
+}
+
+class AtomDisplayerView: UIView, UITableViewDataSource {
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.layer.borderColor = UIColor.lightGray.cgColor
+        self.layer.borderWidth = 0.5
+    }
+    
+    @IBOutlet weak var atomInformationView: UITableView!
+    
+    weak var atom: Atom? {
+        didSet {
+            self.reloadInfos()
+        }
+    }
+    
+    var shown: Bool = false {
+        didSet {
+            if self.shown {
+                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            } else {
+                self.transform = CGAffineTransform(translationX: 0, y: self.bounds.height / 2)
+                self.transform = self.transform.scaledBy(x: 1.0, y: 0.001)
+            }
+        }
+    }
+    
+    func animate(shown: Bool) {
+        UIView.animate(withDuration: 0.4,
+                       delay: 0.1,
+                       options: .curveEaseInOut,
+                       animations: {
+                        self.shown = shown
+        })
+    }
+    
+    func reloadInfos() {
+        self.atomInformationView.reloadData()
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let atom = self.atom,
+            let informations = AtomManager.shared.atomsInformations[atom.symbol] else {
+                return 1
+        }
+        return informations.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "InformationCell", for: indexPath)
         
+        if let atom = self.atom,
+            let informations = AtomManager.shared.atomsInformations[atom.symbol] {
+            let pair = informations[informations.index(informations.startIndex, offsetBy: indexPath.row)]
+            cell.textLabel?.text = pair.key
+            cell.detailTextLabel?.text = (pair.value as? CustomStringConvertible)?.description ?? "nope"
+        } else {
+            cell.textLabel?.text = "unknown atom"
+            cell.detailTextLabel?.text = "lol sorry"
+        }
+        
+        return cell
     }
     
 }

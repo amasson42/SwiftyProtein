@@ -63,9 +63,11 @@ extension LoginViewController {
     func handleOK(alertAction: UIAlertAction!) -> Void {
         self.authenticate()
     }
+    
     func handleDelete(alertAction: UIAlertAction!) -> Void {
         exit(42)
     }
+    
     func handleCancel(alertAction: UIAlertAction!) {
     }
     

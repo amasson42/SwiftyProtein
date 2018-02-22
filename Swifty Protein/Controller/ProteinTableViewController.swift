@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProteinTableViewController: UITableViewController {
+class ProteinTableViewController: UIViewController {
     
     enum CellState {
         case unopen
@@ -17,19 +17,23 @@ class ProteinTableViewController: UITableViewController {
         case error
     }
     var proteinsHeaders: [CellState] = []
+    var filteredIndexes: [Int] = []
     
     weak var selectedHeader: ProteinHeader?
     var selectedData: ProteinData?
     
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchBar.delegate     = self
         tableView.delegate     = self
         tableView.dataSource   = self
         tableView.rowHeight    = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 200
         self.proteinsHeaders = Array<CellState>(repeating: .unopen, count: ProteinManager.allProteinIDs.count)
+        self.filteredIndexes = self.proteinsHeaders.indices.map({$0})
     }
     
     override func didReceiveMemoryWarning() {
@@ -50,52 +54,58 @@ class ProteinTableViewController: UITableViewController {
     
 }
 
-extension ProteinTableViewController {
+extension ProteinTableViewController: UITableViewDataSource {
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ProteinManager.allProteinIDs.count
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.filteredIndexes.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CellProtein", for: indexPath) as! ProteinTableViewCell
         
-        switch self.proteinsHeaders[indexPath.row] {
+        let index = self.filteredIndexes[indexPath.row]
+        let id = ProteinManager.allProteinIDs[index]
+        switch self.proteinsHeaders[index] {
         case .unopen:
-            let id = ProteinManager.allProteinIDs[indexPath.row]
             cell.takeValue(fromLoadingId: id)
-            self.proteinsHeaders[indexPath.row] = .downloading
+            self.proteinsHeaders[index] = .downloading
             ProteinManager.shared.loadProteinHeader(id: id) {
                 (header, error) in
                 guard let header = header else {
                     DispatchQueue.main.async {
-                        self.proteinsHeaders[indexPath.row] = .error
-                        cell.takeErrorValue()
+                        self.proteinsHeaders[index] = .error
+                        cell.takeErrorValue(withId: id)
                         self.alert(title: "Ligand \(id)", message: "Loading error")
                     }
                     return
                 }
                 DispatchQueue.main.async {
-                    self.proteinsHeaders[indexPath.row] = .downloaded(header: header)
+                    self.proteinsHeaders[index] = .downloaded(header: header)
                     cell.takeValue(fromProteinHeader: header)
                 }
             }
         case .downloading:
-            cell.takeValue(fromLoadingId: ProteinManager.allProteinIDs[indexPath.row])
+            cell.takeValue(fromLoadingId: ProteinManager.allProteinIDs[index])
         case .downloaded(let header):
             cell.takeValue(fromProteinHeader: header)
         case .error:
-            cell.takeErrorValue()
+            cell.takeErrorValue(withId: id)
         }
         
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if case .downloaded(let header) = self.proteinsHeaders[indexPath.row] {
+}
+
+extension ProteinTableViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let index = self.filteredIndexes[indexPath.row]
+        if case .downloaded(let header) = self.proteinsHeaders[index] {
             self.selectedHeader = header
             ProteinManager.shared.loadProteinData(header: header) {
                 (data, error) in
@@ -111,6 +121,24 @@ extension ProteinTableViewController {
                 }
             }
         }
+    }
+    
+}
+
+extension ProteinTableViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        defer {
+            self.tableView.reloadData()
+        }
+        guard let text = searchBar.text,
+            !text.isEmpty else {
+                self.filteredIndexes = self.proteinsHeaders.indices.map({$0})
+                return
+        }
+        self.filteredIndexes = ProteinManager.allProteinIDs.enumerated()
+            .filter({$0.element.range(of: text, options: .caseInsensitive) != nil})
+            .map({$0.offset})
     }
     
 }

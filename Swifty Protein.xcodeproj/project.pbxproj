@@ -21,8 +21,10 @@
 		8EDB0845203DA30500E56F6C /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDB0844203DA30500E56F6C /* DateUtils.swift */; };
 		8EDB0847203DAA7A00E56F6C /* ProteinParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDB0846203DAA7A00E56F6C /* ProteinParser.swift */; };
 		8EDB0849203DBFCD00E56F6C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDB0848203DBFCD00E56F6C /* Color.swift */; };
+		F63F39CE203F2BD900172C27 /* JsonReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63F39CD203F2BD900172C27 /* JsonReader.swift */; };
 		F64DCBF42036FB3F00887BCE /* ProteinManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64DCBF32036FB3F00887BCE /* ProteinManager.swift */; };
 		F64DCBF62037402800887BCE /* RandomUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64DCBF52037402800887BCE /* RandomUtils.swift */; };
+		F695A819203F2B2900677E0D /* PeriodicTableData.json in Resources */ = {isa = PBXBuildFile; fileRef = F695A818203F2B2900677E0D /* PeriodicTableData.json */; };
 		F6E8A9BE203AF69800798146 /* LigandsNames.txt in Resources */ = {isa = PBXBuildFile; fileRef = F6E8A9BD203AF69800798146 /* LigandsNames.txt */; };
 /* End PBXBuildFile section */
 
@@ -43,8 +45,10 @@
 		8EDB0844203DA30500E56F6C /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		8EDB0846203DAA7A00E56F6C /* ProteinParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinParser.swift; sourceTree = "<group>"; };
 		8EDB0848203DBFCD00E56F6C /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		F63F39CD203F2BD900172C27 /* JsonReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonReader.swift; sourceTree = "<group>"; };
 		F64DCBF32036FB3F00887BCE /* ProteinManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinManager.swift; sourceTree = "<group>"; };
 		F64DCBF52037402800887BCE /* RandomUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomUtils.swift; sourceTree = "<group>"; };
+		F695A818203F2B2900677E0D /* PeriodicTableData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PeriodicTableData.json; sourceTree = "<group>"; };
 		F6E8A9BD203AF69800798146 /* LigandsNames.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LigandsNames.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -86,6 +90,7 @@
 				35B2D2BF2035909500B94B10 /* Assets.xcassets */,
 				35B2D2C12035909500B94B10 /* LaunchScreen.storyboard */,
 				35B2D2C42035909500B94B10 /* Info.plist */,
+				F695A818203F2B2900677E0D /* PeriodicTableData.json */,
 				F6E8A9BD203AF69800798146 /* LigandsNames.txt */,
 			);
 			path = "Swifty Protein";
@@ -98,6 +103,7 @@
 				8EDB0842203D976A00E56F6C /* ArrayUtils.swift */,
 				8EDB0844203DA30500E56F6C /* DateUtils.swift */,
 				8EDB0848203DBFCD00E56F6C /* Color.swift */,
+				F63F39CD203F2BD900172C27 /* JsonReader.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -191,6 +197,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F695A819203F2B2900677E0D /* PeriodicTableData.json in Resources */,
 				35B2D2C32035909500B94B10 /* LaunchScreen.storyboard in Resources */,
 				35B2D2C02035909500B94B10 /* Assets.xcassets in Resources */,
 				35B2D2BE2035909500B94B10 /* Main.storyboard in Resources */,
@@ -205,6 +212,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F63F39CE203F2BD900172C27 /* JsonReader.swift in Sources */,
 				8EDB0845203DA30500E56F6C /* DateUtils.swift in Sources */,
 				35B2D2D12035994000B94B10 /* ProteinClass.swift in Sources */,
 				8EDB0841203C6D9600E56F6C /* GraphNodeView.swift in Sources */,

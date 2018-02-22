@@ -33,7 +33,9 @@ class ProteinManager: NSObject {
     }()
     
     func loadProteinHeader(id: String, completion: @escaping (ProteinHeader?, ProteinManager.LoadingError?) -> ()) {
+        networkCount += 1
         DispatchQueue.global(qos: .background).async {
+            defer {networkCount -= 1}
             let headerUrl = self.getURLHeader(ofID: id)
             guard let parser = XMLParser(contentsOf: headerUrl) else {
                 completion(nil, .unexistingID)
@@ -68,7 +70,9 @@ class ProteinManager: NSObject {
     
     /** load a protein with the given name from the text file */
     func loadProteinData(header: ProteinHeader, completion: @escaping (ProteinData?, ProteinManager.LoadingError?) -> ()) {
+        networkCount += 1
         DispatchQueue.global(qos: .background).async {
+            defer {networkCount -= 1}
             let dataUrl = self.getURLData(ofID: header.id)
             do {
                 let content = try String(contentsOf: dataUrl)
@@ -91,6 +95,48 @@ class ProteinManager: NSObject {
     
     func getURLData(ofID ID: String) -> URL {
         return (URL(string: "https://files.rcsb.org/ligands/view/" + ID + "_ideal.pdb"))!
+    }
+    
+}
+
+// TODO: put this shit in another file
+import UIKit
+
+class AtomManager: NSObject {
+    
+    static var shared = AtomManager()
+    
+    private override init() {
+        super.init()
+        self.loadInformations()
+    }
+    
+    public private(set) var atomColors: [String: UIColor] = [:]
+    public let unknownColor = UIColor(rgbValues: 255, 20, 147)
+    public private(set) var atomsInformations: [String: [String: Any]] = [:]
+    
+    func loadInformations() {
+        guard let dataUrl = Bundle.main.url(forResource: "PeriodicTableData", withExtension: "json"),
+            let dataData = try? Data(contentsOf: dataUrl),
+            let jsonResult = try? JSONSerialization.jsonObject(with: dataData, options: []) else {
+                return
+        }
+        let object = JsonObject(json: jsonResult)
+        print(object)
+        if let array = object.arrayValue {
+            for object in array {
+                if let dico = object.dictionnaryValue,
+                    let symbol = dico["symbol"]?.stringValue {
+                    self.atomsInformations[symbol.uppercased()] = dico
+                    if let cpkHexColor = dico["cpkHexColor"]?.stringValue,
+                        let color = UIColor(hexString: cpkHexColor) {
+                        self.atomColors[symbol.uppercased()] = color
+                    } else {
+                        print("no color for", symbol)
+                    }
+                }
+            }
+        }
     }
     
 }

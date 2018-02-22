@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 // https://files.rcsb.org/ligands/view/**.xml
 
@@ -24,43 +23,10 @@ class ProteinHeader {
     init(id: String) {
         self.id = id
     }
+    
 }
 
 class ProteinData {
-    
-    static let atomColors: [String: UIColor] = [
-        "H": .white,
-        "C": .black,
-        "N": UIColor.blue, // dark blue
-        "O": .red,
-        "F": .green,
-        "Cl": .green,
-        "Br": UIColor.red, // dark red
-        "I": UIColor.magenta, // dark violet
-        "He": .cyan,
-        "Ne": .cyan,
-        "Ar": .cyan,
-        "Xe": .cyan,
-        "Kr": .cyan,
-        "P": .orange,
-        "S": .yellow,
-        "B": UIColor.purple, // pink salmon
-        "Li": .magenta,
-        "Na": .magenta,
-        "K": .magenta,
-        "Rb": .magenta,
-        "Cs": .magenta,
-        "Fr": .magenta,
-        "Be": UIColor(rgbValues: 14, 117, 15),
-        "Mg": UIColor(rgbValues: 14, 117, 15),
-        "Ca": UIColor(rgbValues: 14, 117, 15),
-        "Sr": UIColor(rgbValues: 14, 117, 15),
-        "Ba": UIColor(rgbValues: 14, 117, 15),
-        "Ra": UIColor(rgbValues: 14, 117, 15),
-        "Ti": .gray,
-        "Fe": UIColor.orange, // dark orange
-    ]
-    static let unknownColor = UIColor.purple
     
     unowned let header: ProteinHeader
     var atoms: [Atom] = []

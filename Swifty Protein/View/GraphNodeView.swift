@@ -56,14 +56,12 @@ extension GraphNodeViewDataSource {
 
 @available(OSX 10.11, iOS 9.0, *)
 protocol GraphNodeViewDelegate: class {
-    func graphNodeView(_ graphNodeView: GraphNodeView, selectedNodeNamed name: String)
+    func graphNodeView(_ graphNodeView: GraphNodeView, selectedNodeNamed name: String?)
 }
 
 @available(OSX 10.11, iOS 9.0, *)
 extension GraphNodeViewDelegate {
-    func graphNodeView(_ graphNodeView: GraphNodeView, selectedNodeNamed name: String) {
-        
-    }
+    func graphNodeView(_ graphNodeView: GraphNodeView, selectedNodeNamed name: String?) {}
 }
 
 @available(OSX 10.11, iOS 9.0, *)
@@ -661,9 +659,7 @@ extension GraphNodeView {
             }
             return nil
         }()
-        if let touchedNodeName = self.selectedNode?.name {
-            self.delegate?.graphNodeView(self, selectedNodeNamed: touchedNodeName)
-        }
+        self.delegate?.graphNodeView(self, selectedNodeNamed: self.selectedNode?.name)
     }
 }
 
