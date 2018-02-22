@@ -21,6 +21,9 @@
 		8EDB0845203DA30500E56F6C /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDB0844203DA30500E56F6C /* DateUtils.swift */; };
 		8EDB0847203DAA7A00E56F6C /* ProteinParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDB0846203DAA7A00E56F6C /* ProteinParser.swift */; };
 		8EDB0849203DBFCD00E56F6C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDB0848203DBFCD00E56F6C /* Color.swift */; };
+		F6259AED203F66DD00C09014 /* AtomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6259AEC203F66DC00C09014 /* AtomManager.swift */; };
+		F6259AEF203F67F500C09014 /* ProteinHeaderDisplayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6259AEE203F67F500C09014 /* ProteinHeaderDisplayerView.swift */; };
+		F6259AF1203F682700C09014 /* AtomDisplayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6259AF0203F682700C09014 /* AtomDisplayerView.swift */; };
 		F63F39CE203F2BD900172C27 /* JsonReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63F39CD203F2BD900172C27 /* JsonReader.swift */; };
 		F64DCBF42036FB3F00887BCE /* ProteinManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64DCBF32036FB3F00887BCE /* ProteinManager.swift */; };
 		F64DCBF62037402800887BCE /* RandomUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64DCBF52037402800887BCE /* RandomUtils.swift */; };
@@ -45,6 +48,9 @@
 		8EDB0844203DA30500E56F6C /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		8EDB0846203DAA7A00E56F6C /* ProteinParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinParser.swift; sourceTree = "<group>"; };
 		8EDB0848203DBFCD00E56F6C /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		F6259AEC203F66DC00C09014 /* AtomManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomManager.swift; sourceTree = "<group>"; };
+		F6259AEE203F67F500C09014 /* ProteinHeaderDisplayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinHeaderDisplayerView.swift; sourceTree = "<group>"; };
+		F6259AF0203F682700C09014 /* AtomDisplayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomDisplayerView.swift; sourceTree = "<group>"; };
 		F63F39CD203F2BD900172C27 /* JsonReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonReader.swift; sourceTree = "<group>"; };
 		F64DCBF32036FB3F00887BCE /* ProteinManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinManager.swift; sourceTree = "<group>"; };
 		F64DCBF52037402800887BCE /* RandomUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomUtils.swift; sourceTree = "<group>"; };
@@ -111,6 +117,7 @@
 		F64DCBED2036F57100887BCE /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F6259AEC203F66DC00C09014 /* AtomManager.swift */,
 				35B2D2D02035994000B94B10 /* ProteinClass.swift */,
 				F64DCBF32036FB3F00887BCE /* ProteinManager.swift */,
 				8EDB0846203DAA7A00E56F6C /* ProteinParser.swift */,
@@ -121,8 +128,10 @@
 		F64DCBEE2036F57500887BCE /* View */ = {
 			isa = PBXGroup;
 			children = (
+				F6259AEE203F67F500C09014 /* ProteinHeaderDisplayerView.swift */,
 				35B2D2CE2035988800B94B10 /* ProteinTableViewCell.swift */,
 				8EDB0840203C6D9600E56F6C /* GraphNodeView.swift */,
+				F6259AF0203F682700C09014 /* AtomDisplayerView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -213,14 +222,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				F63F39CE203F2BD900172C27 /* JsonReader.swift in Sources */,
+				F6259AED203F66DD00C09014 /* AtomManager.swift in Sources */,
 				8EDB0845203DA30500E56F6C /* DateUtils.swift in Sources */,
 				35B2D2D12035994000B94B10 /* ProteinClass.swift in Sources */,
 				8EDB0841203C6D9600E56F6C /* GraphNodeView.swift in Sources */,
 				35B2D2CB203596FA00B94B10 /* ProteinTableViewController.swift in Sources */,
+				F6259AF1203F682700C09014 /* AtomDisplayerView.swift in Sources */,
 				8EDB0849203DBFCD00E56F6C /* Color.swift in Sources */,
 				8EDB0847203DAA7A00E56F6C /* ProteinParser.swift in Sources */,
 				8EDB0843203D976A00E56F6C /* ArrayUtils.swift in Sources */,
 				35B2D2BB2035909500B94B10 /* LoginViewController.swift in Sources */,
+				F6259AEF203F67F500C09014 /* ProteinHeaderDisplayerView.swift in Sources */,
 				F64DCBF42036FB3F00887BCE /* ProteinManager.swift in Sources */,
 				35B2D2CF2035988800B94B10 /* ProteinTableViewCell.swift in Sources */,
 				35B2D2CD2035972500B94B10 /* ProteinViewController.swift in Sources */,
