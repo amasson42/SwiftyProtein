@@ -10,6 +10,9 @@ import Foundation
 
 class ProteinHeaderParser: NSObject, XMLParserDelegate {
     
+    let xmlParser: XMLParser
+    
+    var id: String
     var name: String?
     var formula: String?
     var type: String?
@@ -28,6 +31,43 @@ class ProteinHeaderParser: NSObject, XMLParserDelegate {
         case nothingInteresting
     }
     var actualReading = ActualReading.nothingInteresting
+    
+    init?(id: String, contentOf url: URL) {
+        self.id = id
+        guard let parser = XMLParser(contentsOf: url) else {
+            return nil
+        }
+        self.xmlParser = parser
+        super.init()
+        self.xmlParser.delegate = self
+    }
+    
+    func parse() {
+        self.xmlParser.parse()
+    }
+    
+    func getProteinHeader() -> ProteinHeader? {
+        if let name = self.name,
+            let formula = self.formula,
+            let type = self.type,
+            let initialDate_str = self.initialDate,
+            let modifiedDate_str = self.modifiedDate,
+            let weight_str = self.weight,
+            let initialDate = Date.date(fromString: initialDate_str, withFormat: "yyyy-MM-dd"),
+            let modifiedDate = Date.date(fromString: modifiedDate_str, withFormat: "yyyy-MM-dd"),
+            let weight = Float(weight_str) {
+            let proteinHeader = ProteinHeader(id: id)
+            proteinHeader.name = name
+            proteinHeader.formula = formula
+            proteinHeader.type = type
+            proteinHeader.initialDate = initialDate
+            proteinHeader.modifiedDate = modifiedDate
+            proteinHeader.weight = weight
+            return proteinHeader
+        } else {
+            return nil
+        }
+    }
     
     func parser(_ parser: XMLParser,
                 didStartElement elementName: String,
@@ -104,15 +144,19 @@ class ProteinHeaderParser: NSObject, XMLParserDelegate {
     }
 }
 
-class ProteinDataParser {
+class ProteinDataParser: NSObject {
     
     unowned let header: ProteinHeader
     var lines: [String]
     var atoms: [Int: Atom] = [:]
     
-    init(header: ProteinHeader, contentsOf string: String) {
+    init?(header: ProteinHeader, contentsOf url: URL) {
+        guard let content = try? String(contentsOf: url) else {
+            return nil
+        }
         self.header = header
-        self.lines = string.components(separatedBy: .newlines)
+        self.lines = content.components(separatedBy: .newlines)
+        super.init()
     }
     
     func parse() {

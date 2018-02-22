@@ -19,7 +19,6 @@ class ProteinManager: NSObject {
     enum LoadingError: Error {
         case unexistingID
         case incompleteFile
-        case networkError
     }
     
     /** the names of all the protein we can display. It's the content of the provided text file for the project */
@@ -36,31 +35,12 @@ class ProteinManager: NSObject {
         DispatchQueue.global(qos: .background).async {
             defer {networkCount -= 1}
             let headerUrl = self.getURLHeader(ofID: id)
-            guard let parser = XMLParser(contentsOf: headerUrl) else {
-                completion(nil, .unexistingID)
-                print(headerUrl)
-                return
+            guard let parser = ProteinHeaderParser(id: id, contentOf: headerUrl) else {
+                return completion(nil, .unexistingID)
             }
-            let headerParser = ProteinHeaderParser()
-            parser.delegate = headerParser
             parser.parse()
-            if let name = headerParser.name,
-                let formula = headerParser.formula,
-                let type = headerParser.type,
-                let initialDate_str = headerParser.initialDate,
-                let modifiedDate_str = headerParser.modifiedDate,
-                let weight_str = headerParser.weight,
-                let initialDate = Date.date(fromString: initialDate_str, withFormat: "yyyy-MM-dd"),
-                let modifiedDate = Date.date(fromString: modifiedDate_str, withFormat: "yyyy-MM-dd"),
-                let weight = Float(weight_str) {
-                let proteinHeader = ProteinHeader(id: id)
-                proteinHeader.name = name
-                proteinHeader.formula = formula
-                proteinHeader.type = type
-                proteinHeader.initialDate = initialDate
-                proteinHeader.modifiedDate = modifiedDate
-                proteinHeader.weight = weight
-                completion(proteinHeader, nil)
+            if let header = parser.getProteinHeader() {
+                completion(header, nil)
             } else {
                 completion(nil, .incompleteFile)
             }
@@ -73,17 +53,14 @@ class ProteinManager: NSObject {
         DispatchQueue.global(qos: .background).async {
             defer {networkCount -= 1}
             let dataUrl = self.getURLData(ofID: header.id)
-            do {
-                let content = try String(contentsOf: dataUrl)
-                let dataParser = ProteinDataParser(header: header, contentsOf: content)
-                dataParser.parse()
-                if let data = dataParser.getProteinData() {
-                    completion(data, nil)
-                } else {
-                    completion(nil, .incompleteFile)
-                }
-            } catch {
-                completion(nil, .networkError)
+            guard let parser = ProteinDataParser(header: header, contentsOf: dataUrl) else {
+                return completion(nil, .unexistingID)
+            }
+            parser.parse()
+            if let data = parser.getProteinData() {
+                completion(data, nil)
+            } else {
+                completion(nil, .incompleteFile)
             }
         }
     }
