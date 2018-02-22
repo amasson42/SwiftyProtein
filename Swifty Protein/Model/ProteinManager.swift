@@ -121,18 +121,14 @@ class AtomManager: NSObject {
             let jsonResult = try? JSONSerialization.jsonObject(with: dataData, options: []) else {
                 return
         }
-        let object = JsonObject(json: jsonResult)
-        print(object)
-        if let array = object.arrayValue {
+        if let array = jsonResult as? [Any] {
             for object in array {
-                if let dico = object.dictionnaryValue,
-                    let symbol = dico["symbol"]?.stringValue {
+                if let dico = object as? [String: Any],
+                    let symbol = dico["symbol"] as? String {
                     self.atomsInformations[symbol.uppercased()] = dico
-                    if let cpkHexColor = dico["cpkHexColor"]?.stringValue,
+                    if let cpkHexColor = dico["cpkHexColor"] as? String,
                         let color = UIColor(hexString: cpkHexColor) {
                         self.atomColors[symbol.uppercased()] = color
-                    } else {
-                        print("no color for", symbol)
                     }
                 }
             }

@@ -196,6 +196,7 @@ class AtomDisplayerView: UIView, UITableViewDataSource {
         self.layer.borderWidth = 0.5
     }
     
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var atomInformationView: UITableView!
     
     weak var atom: Atom? {
@@ -225,6 +226,12 @@ class AtomDisplayerView: UIView, UITableViewDataSource {
     }
     
     func reloadInfos() {
+        if let atom = self.atom,
+            let infos = AtomManager.shared.atomsInformations[atom.symbol],
+            let name = infos["name"] as? String,
+            let symbol = infos["symbol"] as? String {
+            self.titleLabel.text = "\(name) - \(symbol)"
+        }
         self.atomInformationView.reloadData()
     }
     
