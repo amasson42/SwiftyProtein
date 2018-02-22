@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ev5-9A-kvC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ev5-9A-kvC">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -44,39 +44,47 @@
                                 <rect key="frame" x="0.0" y="72" width="375" height="82"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yDP-4h-V5Q" id="SLM-VQ-Fvf">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="81.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="82"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n4r-B7-VK3">
-                                            <rect key="frame" x="16" y="11" width="45" height="21"/>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="k8h-bg-Acz">
+                                            <rect key="frame" x="339" y="11" width="20" height="20"/>
+                                        </activityIndicatorView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Id" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dp9-g2-3bI">
+                                            <rect key="frame" x="16" y="11" width="14.5" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="k8h-bg-Acz">
-                                            <rect key="frame" x="339" y="11" width="20" height="20"/>
-                                        </activityIndicatorView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Formula" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QtD-Ac-GfX">
-                                            <rect key="frame" x="16" y="40" width="63" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Formula" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QtD-Ac-GfX">
+                                            <rect key="frame" x="38" y="11" width="62.5" height="20.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n4r-B7-VK3">
+                                            <rect key="frame" x="16" y="39" width="343" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="k8h-bg-Acz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="n4r-B7-VK3" secondAttribute="trailing" constant="10" id="4JY-mP-wkm"/>
+                                        <constraint firstItem="n4r-B7-VK3" firstAttribute="top" secondItem="Dp9-g2-3bI" secondAttribute="bottom" constant="7.5" id="5Li-EB-4ae"/>
                                         <constraint firstItem="k8h-bg-Acz" firstAttribute="top" secondItem="SLM-VQ-Fvf" secondAttribute="topMargin" id="5ld-S7-GuF"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="n4r-B7-VK3" secondAttribute="trailing" id="CdC-97-KC9"/>
                                         <constraint firstItem="k8h-bg-Acz" firstAttribute="trailing" secondItem="SLM-VQ-Fvf" secondAttribute="trailingMargin" id="ERP-7s-H4b"/>
-                                        <constraint firstItem="n4r-B7-VK3" firstAttribute="leading" secondItem="SLM-VQ-Fvf" secondAttribute="leadingMargin" id="EXW-Ty-pcu"/>
-                                        <constraint firstItem="QtD-Ac-GfX" firstAttribute="top" secondItem="n4r-B7-VK3" secondAttribute="bottom" constant="8" id="Kfg-Ku-Dvd"/>
-                                        <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="QtD-Ac-GfX" secondAttribute="bottom" id="bFD-le-Jgw"/>
-                                        <constraint firstItem="QtD-Ac-GfX" firstAttribute="leading" secondItem="SLM-VQ-Fvf" secondAttribute="leadingMargin" id="n9z-j4-Pfs"/>
-                                        <constraint firstItem="n4r-B7-VK3" firstAttribute="top" secondItem="SLM-VQ-Fvf" secondAttribute="topMargin" id="yqk-67-6D3"/>
+                                        <constraint firstItem="k8h-bg-Acz" firstAttribute="leading" secondItem="QtD-Ac-GfX" secondAttribute="trailing" id="UTc-gJ-WMB"/>
+                                        <constraint firstItem="QtD-Ac-GfX" firstAttribute="leading" secondItem="Dp9-g2-3bI" secondAttribute="trailing" constant="7.5" id="Uez-Rv-l1W"/>
+                                        <constraint firstItem="Dp9-g2-3bI" firstAttribute="top" secondItem="SLM-VQ-Fvf" secondAttribute="topMargin" id="pL2-iJ-Wdo"/>
+                                        <constraint firstItem="Dp9-g2-3bI" firstAttribute="leading" secondItem="SLM-VQ-Fvf" secondAttribute="leadingMargin" id="rfj-PY-Rm3"/>
+                                        <constraint firstItem="n4r-B7-VK3" firstAttribute="leading" secondItem="SLM-VQ-Fvf" secondAttribute="leadingMargin" id="vOO-hQ-dpi"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="activityIndicator" destination="k8h-bg-Acz" id="uxR-mm-Nn5"/>
                                     <outlet property="formulaLabel" destination="QtD-Ac-GfX" id="SWQ-If-cfq"/>
+                                    <outlet property="idLabel" destination="Dp9-g2-3bI" id="Mj2-3h-sVL"/>
                                     <outlet property="nameLabel" destination="n4r-B7-VK3" id="dx6-hQ-VRX"/>
                                 </connections>
                             </tableViewCell>

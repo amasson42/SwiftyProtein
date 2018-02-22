@@ -117,7 +117,7 @@ class GraphNodeView: UIView {
     
     // MARK: Scene uses
     private var lastUpdateTime: TimeInterval?
-    private var sceneView: SCNView!
+    private(set) var sceneView: SCNView!
     private var scene: SCNScene!
     private var nodesNode: SCNNode!
     private var linksNode: SCNNode!

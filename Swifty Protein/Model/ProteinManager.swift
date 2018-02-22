@@ -37,6 +37,7 @@ class ProteinManager: NSObject {
             let headerUrl = self.getURLHeader(ofID: id)
             guard let parser = XMLParser(contentsOf: headerUrl) else {
                 completion(nil, .unexistingID)
+                print(headerUrl)
                 return
             }
             let headerParser = ProteinHeaderParser()

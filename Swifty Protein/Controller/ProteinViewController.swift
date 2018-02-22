@@ -13,12 +13,7 @@ class ProteinViewController: UIViewController {
     
     @IBOutlet weak var proteinView: GraphNodeView!
     
-    var protein: (header: ProteinHeader, data: ProteinData)? {
-        didSet {
-            print("just set")
-        }
-    }
-    
+    var protein: (header: ProteinHeader, data: ProteinData)?
     var atoms: [String: Atom] = [:]
     
     override func viewDidLoad() {
@@ -29,8 +24,6 @@ class ProteinViewController: UIViewController {
             for atom in data.atoms {
                 self.atoms["\(atom.id)"] = atom
             }
-        } else {
-            print("no data yet")
         }
         self.proteinView.dataSource = self
         self.proteinView.delegate = self
@@ -41,7 +34,9 @@ class ProteinViewController: UIViewController {
     }
     
     @IBAction func btShare(_ sender: Any) {
-        
+        let shot = proteinView.sceneView.snapshot()
+        let shareVC = UIActivityViewController(activityItems: [shot, "Share"], applicationActivities: nil)
+        self.present(shareVC, animated: true, completion: nil)
     }
     
 }
@@ -62,7 +57,7 @@ extension ProteinViewController: GraphNodeViewDataSource {
         guard let atom = self.atoms[name] else {
             return (self as GraphNodeViewDataSource).graphNodeView(graphNodeView, modelForNodeNamed: name)
         }
-        let sphere = SCNSphere(radius: 0.5)
+        let sphere = SCNSphere(radius: CGFloat(atom.radius) / 2)
         sphere.materials.first?.diffuse.contents = ProteinData.atomColors[atom.symbol] ?? UIColor.lightGray
         let node = SCNNode(geometry: sphere)
         return node
@@ -97,7 +92,7 @@ extension ProteinViewController: GraphNodeViewDataSource {
             return nil
         }
         return GraphNodeView.LinkProperty(lineShape: .round,
-                                          lineWidth: 0.1,
+                                          lineWidth: 0.15,
                                           color: ProteinData.atomColors[atom.symbol] ?? UIColor.lightGray,
                                           arrowShaped: false,
                                           startingDistance: 0.0, endingDistance: 0.5)
@@ -107,6 +102,9 @@ extension ProteinViewController: GraphNodeViewDataSource {
 extension ProteinViewController: GraphNodeViewDelegate {
     
     func graphNodeView(_ graphNodeView: GraphNodeView, selectedNodeNamed name: String) {
+        guard let atom = self.atoms[name] else {
+            return
+        }
         
     }
     

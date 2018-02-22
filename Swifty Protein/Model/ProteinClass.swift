@@ -79,10 +79,10 @@ class Atom {
     var x: Float = 0.0
     var y: Float = 0.0
     var z: Float = 0.0
+    var radius: Float = 0.0
     var conects: [Int] = []
     
     init(id: Int) {
         self.id = id
     }
 }
-

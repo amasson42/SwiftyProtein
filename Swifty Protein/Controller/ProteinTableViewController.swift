@@ -10,7 +10,13 @@ import UIKit
 
 class ProteinTableViewController: UITableViewController {
     
-    var proteinsHeaders: [ProteinHeader?] = []
+    enum CellState {
+        case unopen
+        case downloading
+        case downloaded(header: ProteinHeader)
+        case error
+    }
+    var proteinsHeaders: [CellState] = []
     
     weak var selectedHeader: ProteinHeader?
     var selectedData: ProteinData?
@@ -20,8 +26,8 @@ class ProteinTableViewController: UITableViewController {
         tableView.delegate     = self
         tableView.dataSource   = self
         tableView.rowHeight    = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 40
-        self.proteinsHeaders = Array<ProteinHeader?>(repeating: nil, count: ProteinManager.allProteinIDs.count)
+        tableView.estimatedRowHeight = 200
+        self.proteinsHeaders = Array<CellState>(repeating: .unopen, count: ProteinManager.allProteinIDs.count)
     }
     
     override func didReceiveMemoryWarning() {
@@ -55,49 +61,50 @@ extension ProteinTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CellProtein", for: indexPath) as! ProteinTableViewCell
         
-        if let header = self.proteinsHeaders[indexPath.row] {
-            cell.takeValue(fromProteinHeader: header)
-        } else {
+        switch self.proteinsHeaders[indexPath.row] {
+        case .unopen:
             let id = ProteinManager.allProteinIDs[indexPath.row]
             cell.takeValue(fromLoadingId: id)
+            self.proteinsHeaders[indexPath.row] = .downloading
             ProteinManager.shared.loadProteinHeader(id: id) {
                 (header, error) in
                 guard let header = header else {
-                    if let error = error {
-                        DispatchQueue.main.async {
-                            cell.takeErrorValue()
-                        }
-                        print(error)
-                    } else {
-                        print("no header")
+                    DispatchQueue.main.async {
+                        self.proteinsHeaders[indexPath.row] = .error
+                        cell.takeErrorValue()
+                        self.alert(title: "Ligand \(id)", message: "Loading error")
                     }
                     return
                 }
-                self.proteinsHeaders[indexPath.row] = header
                 DispatchQueue.main.async {
+                    self.proteinsHeaders[indexPath.row] = .downloaded(header: header)
                     cell.takeValue(fromProteinHeader: header)
                 }
             }
+        case .downloading:
+            cell.takeValue(fromLoadingId: ProteinManager.allProteinIDs[indexPath.row])
+        case .downloaded(let header):
+            cell.takeValue(fromProteinHeader: header)
+        case .error:
+            cell.takeErrorValue()
         }
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let header = self.proteinsHeaders[indexPath.row] {
+        if case .downloaded(let header) = self.proteinsHeaders[indexPath.row] {
             self.selectedHeader = header
             ProteinManager.shared.loadProteinData(header: header) {
                 (data, error) in
                 guard let data = data else {
-                    if let error = error {
-                        print(error)
-                    } else {
-                        print("no data")
+                    DispatchQueue.main.async {
+                        self.alert(title: "Ligand \(header.id)", message: "Can't download data")
                     }
                     return
                 }
-                self.selectedData = data
                 DispatchQueue.main.async {
+                    self.selectedData = data
                     self.performSegue(withIdentifier: "segueToProtein", sender: tableView)
                 }
             }

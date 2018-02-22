@@ -123,7 +123,8 @@ class ProteinDataParser {
                     let id = Int(splits[1]),
                     let x = Float(splits[6]),
                     let y = Float(splits[7]),
-                    let z = Float(splits[8]) else {
+                    let z = Float(splits[8]),
+                    let radius = Float(splits[9]) else {
                         continue lineLoop
                 }
                 let atom = Atom(id: id)
@@ -132,6 +133,7 @@ class ProteinDataParser {
                 atom.x = x
                 atom.y = y
                 atom.z = z
+                atom.radius = radius
                 self.atoms[id] = atom
             } else if splits.first == "CONECT" {
                 let ids = splits.dropFirst().flatMap {Int($0)}

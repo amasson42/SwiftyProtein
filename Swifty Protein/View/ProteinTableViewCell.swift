@@ -12,6 +12,7 @@ class ProteinTableViewCell: UITableViewCell {
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var formulaLabel: UILabel!
+    @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func awakeFromNib() {
@@ -26,20 +27,22 @@ class ProteinTableViewCell: UITableViewCell {
     }
 
     func takeValue(fromProteinHeader header: ProteinHeader) {
-        self.nameLabel.text = header.name
-        self.formulaLabel.text = header.formula
+        self.idLabel.text       = header.id
+        self.nameLabel.text     = header.name
+        self.formulaLabel.text  = header.formula
         self.activityIndicator.isHidden = true
     }
     
     func takeValue(fromLoadingId id: String) {
-        self.nameLabel.text = "\(id)"
-        self.formulaLabel.text = "Loading..."
+        self.idLabel.text       = "\(id)"
+        self.nameLabel.text     = "Loading..."
+        self.formulaLabel.text  = ""
         self.activityIndicator.startAnimating()
     }
     
     func takeErrorValue() {
-        self.nameLabel.text = ""
-        self.formulaLabel.text = "loading error"
+        self.nameLabel.text     = ""
+        self.formulaLabel.text  = "loading error"
         self.activityIndicator.isHidden = true
     }
 }
