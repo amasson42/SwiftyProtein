@@ -98,13 +98,14 @@ extension ProteinTableViewController: UITableViewDataSource {
                         self.proteinsHeaders[index] = .error
                         cell.idLabel.textColor      = .red
                         cell.takeErrorValue(withId: id)
-                        self.alert(title: "Ligand \(id)", message: "Loading error")
+                        self.alert(title: "Ligand \(id)", message: "Loading error", id: id)
                     }
                     return
                 }
                 DispatchQueue.main.async {
                     self.proteinsHeaders[index] = .downloaded(header: header)
                     cell.takeValue(fromProteinHeader: header)
+                    guard tableView.cellForRow(at: indexPath) != nil else { return }
                     self.tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
                 }
             }
@@ -135,7 +136,7 @@ extension ProteinTableViewController: UITableViewDelegate {
                 (data, error) in
                 guard let data = data else {
                     DispatchQueue.main.async {
-                        self.alert(title: "Ligand \(header.id)", message: "Can't download data")
+                        self.alert(title: "Ligand \(header.id)", message: "Can't download data", id: header.id)
                     }
                     return
                 }
@@ -170,8 +171,8 @@ extension ProteinTableViewController: UISearchBarDelegate {
 //  error "popup"
 extension ProteinTableViewController {
     
-    func alert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+    func alert(title: String, message: String, id: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         let OkAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         
