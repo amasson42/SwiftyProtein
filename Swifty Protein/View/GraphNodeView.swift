@@ -36,7 +36,7 @@ protocol GraphNodeViewDataSource: class {
 @available(OSX 10.11, iOS 9.0, *)
 extension GraphNodeViewDataSource {
     func graphNodeView(_ graphNodeView: GraphNodeView, modelForNodeNamed name: String) -> SCNNode {
-        return SCNNode(geometry: SCNSphere(radius: 0.5))
+        return SCNNode(geometry: SCNSphere(radius: CGFloat(GraphNodeView.Constants.nodeRadius)))
     }
     
     func graphNodeView(_ graphNodeView: GraphNodeView, positionForNodeNamed name: String) -> SCNVector3? {
@@ -57,17 +57,37 @@ extension GraphNodeViewDataSource {
 @available(OSX 10.11, iOS 9.0, *)
 protocol GraphNodeViewDelegate: class {
     func graphNodeView(_ graphNodeView: GraphNodeView, selectedNodeNamed name: String?)
+    func graphNodeView(_ graphNodeView: GraphNodeView, createSelectorNodeForNodeNamed name: String) -> SCNNode
 }
 
 @available(OSX 10.11, iOS 9.0, *)
 extension GraphNodeViewDelegate {
+    
     func graphNodeView(_ graphNodeView: GraphNodeView, selectedNodeNamed name: String?) {}
+    
+    func graphNodeView(_ graphNodeView: GraphNodeView, createSelectorNodeForNodeNamed name: String) -> SCNNode {
+        let node = SCNNode()
+        let scaler1 = SCNNode()
+        scaler1.scale = SCNVector3(x: 0.1, y: 0.5, z: 0.1)
+        scaler1.runAction(.repeatForever(.rotateBy(x: 0, y: .pi / 6, z: 0, duration: 1.0)))
+        scaler1.runAction(.repeatForever(.rotateBy(x: 2 * .pi / 3, y: 0, z: .pi / -4, duration: 1.0)))
+        scaler1.addChildNode(SCNNode(geometry: SCNTorus(ringRadius: 6.5, pipeRadius: 0.25)))
+        node.addChildNode(scaler1)
+        let scaler2 = SCNNode()
+        scaler2.scale = SCNVector3(x: 0.1, y: 0.3, z: 0.1)
+        scaler2.runAction(.repeatForever(.rotateBy(x: 0, y: -.pi / 6, z: 0, duration: 0.4)))
+        scaler2.runAction(.repeatForever(.rotateBy(x: -.pi / 8, y: 0, z: .pi / 4, duration: 0.7)))
+        scaler2.addChildNode(SCNNode(geometry: SCNTorus(ringRadius: 6, pipeRadius: 0.25)))
+        node.addChildNode(scaler2)
+        return node
+    }
 }
 
 @available(OSX 10.11, iOS 9.0, *)
 class GraphNodeView: UIView {
     
     struct Constants {
+        static let nodeRadius: Float = 0.1
         static let preferedDistanceBetweenNodes: Float = 10.0
         static let startingDistanceBetweenNodes: Float = 1.0
         static let arrowHeadPercentOccupation: Float = 0.1
@@ -397,8 +417,8 @@ extension GraphNodeView {
         linksNode = SCNNode()
         scene.rootNode.addChildNode(linksNode)
         
-        selectorNode = createSelectorNode()
-        scene.rootNode.addChildNode(selectorNode)
+        selectorNode = SCNNode()
+        nodesNode.addChildNode(selectorNode)
         
         sceneView.scene = scene
         sceneView.allowsCameraControl = true
@@ -545,36 +565,18 @@ extension GraphNodeView {
                            z: nodeDst.position.z - nodeSrc.position.z)
         
         let distance = sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z))
-        nodeLink.position = SCNVector3(x: nodeSrc.position.x + 0.5 * v.x / distance,
-                                       y: nodeSrc.position.y + 0.5 * v.y / distance,
-                                       z: nodeSrc.position.z + 0.5 * v.z / distance)
+        nodeLink.position = SCNVector3(x: nodeSrc.position.x + Constants.nodeRadius * v.x / distance,
+                                       y: nodeSrc.position.y + Constants.nodeRadius * v.y / distance,
+                                       z: nodeSrc.position.z + Constants.nodeRadius * v.z / distance)
         
         let yaw = atan2(v.y, v.x) + .pi / 2
         let pitch = atan2(sqrt(v.x * v.x + v.y * v.y), v.z) + .pi / 2
         
         nodeLink.eulerAngles.x = pitch
         nodeLink.eulerAngles.z = yaw
-        nodeLink.scale.y = distance - 1.0
+        nodeLink.scale.y = distance - Constants.nodeRadius * 2
     }
     
-    private func createSelectorNode() -> SCNNode {
-        let node = SCNNode()
-        
-        let scaler1 = SCNNode()
-        scaler1.scale = SCNVector3(x: 0.1, y: 0.5, z: 0.1)
-        scaler1.runAction(.repeatForever(.rotateBy(x: 0, y: .pi / 6, z: 0, duration: 1.0)))
-        scaler1.runAction(.repeatForever(.rotateBy(x: 2 * .pi / 3, y: 0, z: .pi / -4, duration: 1.0)))
-        scaler1.addChildNode(SCNNode(geometry: SCNTorus(ringRadius: 6.5, pipeRadius: 0.25)))
-        node.addChildNode(scaler1)
-        let scaler2 = SCNNode()
-        scaler2.scale = SCNVector3(x: 0.1, y: 0.3, z: 0.1)
-        scaler2.runAction(.repeatForever(.rotateBy(x: 0, y: -.pi / 6, z: 0, duration: 0.4)))
-        scaler2.runAction(.repeatForever(.rotateBy(x: -.pi / 8, y: 0, z: .pi / 4, duration: 0.7)))
-        scaler2.addChildNode(SCNNode(geometry: SCNTorus(ringRadius: 6, pipeRadius: 0.25)))
-        node.addChildNode(scaler2)
-        
-        return node
-    }
 }
 
 // MARK: Calls to datasource
@@ -659,8 +661,17 @@ extension GraphNodeView {
             }
             return nil
         }()
+        if let delegate = self.delegate {
+            if let name = self.selectedNode?.name {
+                self.selectorNode.removeFromParentNode()
+                self.selectorNode = self.delegate?.graphNodeView(self, createSelectorNodeForNodeNamed: name)
+                self.nodesNode.addChildNode(self.selectorNode)
+            }
+            delegate.graphNodeView(self, selectedNodeNamed: self.selectedNode?.name)
+        }
         self.delegate?.graphNodeView(self, selectedNodeNamed: self.selectedNode?.name)
     }
+    
 }
 
 #if os(macOS)

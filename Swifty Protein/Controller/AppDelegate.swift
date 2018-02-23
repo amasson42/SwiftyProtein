@@ -22,7 +22,7 @@ public var networkCount: Int = 0 {
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
     var appViewController: UIViewController?
 

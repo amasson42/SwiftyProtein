@@ -80,7 +80,7 @@ extension ProteinViewController: GraphNodeViewDataSource {
         guard let atom = self.atoms[name] else {
             return nil
         }
-        let distanceMult: Float = 1.3
+        let distanceMult: Float = 1.0
         return SCNVector3(distanceMult * atom.x,
                           distanceMult * atom.y,
                           distanceMult * atom.z)
