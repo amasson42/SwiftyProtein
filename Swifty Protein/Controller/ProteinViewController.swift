@@ -50,6 +50,13 @@ class ProteinViewController: UIViewController {
         self.proteinView.delegate = self
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.barTintColor = UIColor.black
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

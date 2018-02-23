@@ -36,6 +36,21 @@ class ProteinTableViewController: UIViewController {
         self.filteredIndexes = self.proteinsHeaders.indices.map({$0})
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UIApplication.shared.statusBarStyle = UIStatusBarStyle.default
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+        searchBar.barTintColor = UIColor(red: 253/255, green: 170/255, blue: 41/255, alpha: 1.0) //253 170 41 jaune // 121 144 155 gris
+        let backgroundImage = UIImage(named: "background.jpg")
+        let imageView = UIImageView(image: backgroundImage)
+        imageView.alpha = 0.2
+        imageView.contentMode = .scaleAspectFit
+        tableView.backgroundView = imageView
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -69,6 +84,9 @@ extension ProteinTableViewController: UITableViewDataSource {
         
         let index = self.filteredIndexes[indexPath.row]
         let id = ProteinManager.allProteinIDs[index]
+        cell.idLabel.textColor      = .black
+//        cell.nameLabel.textColor    = .white
+//        cell.formulaLabel.textColor = .white
         switch self.proteinsHeaders[index] {
         case .unopen:
             cell.takeValue(fromLoadingId: id)
@@ -78,6 +96,7 @@ extension ProteinTableViewController: UITableViewDataSource {
                 guard let header = header else {
                     DispatchQueue.main.async {
                         self.proteinsHeaders[index] = .error
+                        cell.idLabel.textColor      = .red
                         cell.takeErrorValue(withId: id)
                         self.alert(title: "Ligand \(id)", message: "Loading error")
                     }
@@ -86,6 +105,7 @@ extension ProteinTableViewController: UITableViewDataSource {
                 DispatchQueue.main.async {
                     self.proteinsHeaders[index] = .downloaded(header: header)
                     cell.takeValue(fromProteinHeader: header)
+                    self.tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
                 }
             }
         case .downloading:
@@ -93,8 +113,12 @@ extension ProteinTableViewController: UITableViewDataSource {
         case .downloaded(let header):
             cell.takeValue(fromProteinHeader: header)
         case .error:
+            cell.idLabel.textColor      = .red
             cell.takeErrorValue(withId: id)
         }
+        
+        cell.backgroundColor    = .clear
+        cell.backgroundColor    = UIColor(white: 1, alpha: 0.1)
         
         return cell
     }
