@@ -131,6 +131,17 @@
                                 <rect key="frame" x="0.0" y="64" width="0.0" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="gw6-4f-di2">
+                                <rect key="frame" x="0.0" y="635" width="0.0" height="29"/>
+                                <segments>
+                                    <segment title="Balls"/>
+                                    <segment title="Balls&amp;Sticks"/>
+                                    <segment title="Sticks"/>
+                                </segments>
+                                <connections>
+                                    <action selector="changeDisplayingStyle:" destination="cp6-yW-oS0" eventType="valueChanged" id="KcP-tu-Q4A"/>
+                                </connections>
+                            </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2H4-aJ-Zu7" customClass="ProteinHeaderDisplayerView" customModule="Swifty_Protein" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="64" width="0.0" height="115"/>
                                 <subviews>
@@ -293,9 +304,12 @@
                         <constraints>
                             <constraint firstItem="xZF-h6-rGp" firstAttribute="bottom" secondItem="yxy-kE-ewE" secondAttribute="bottom" id="7P5-wo-ugc"/>
                             <constraint firstItem="2H4-aJ-Zu7" firstAttribute="top" secondItem="yxy-kE-ewE" secondAttribute="top" id="9Jq-ew-6pF"/>
+                            <constraint firstItem="gw6-4f-di2" firstAttribute="trailing" secondItem="yxy-kE-ewE" secondAttribute="trailing" constant="-8" id="C7s-yQ-ZB7"/>
                             <constraint firstItem="5Ms-pZ-1RV" firstAttribute="leading" secondItem="yxy-kE-ewE" secondAttribute="leading" id="Nye-lt-qhW"/>
                             <constraint firstItem="xZF-h6-rGp" firstAttribute="top" secondItem="yxy-kE-ewE" secondAttribute="top" id="OZQ-DQ-z0f"/>
+                            <constraint firstItem="yxy-kE-ewE" firstAttribute="bottom" secondItem="gw6-4f-di2" secondAttribute="bottom" constant="4" id="SEh-tf-JLN"/>
                             <constraint firstItem="yxy-kE-ewE" firstAttribute="bottom" secondItem="5Ms-pZ-1RV" secondAttribute="bottom" id="WS7-W8-y3j"/>
+                            <constraint firstItem="gw6-4f-di2" firstAttribute="leading" secondItem="yxy-kE-ewE" secondAttribute="leading" constant="8" id="XQw-4d-W0G"/>
                             <constraint firstItem="yxy-kE-ewE" firstAttribute="trailing" secondItem="5Ms-pZ-1RV" secondAttribute="trailing" id="XTc-KU-Mro"/>
                             <constraint firstItem="xZF-h6-rGp" firstAttribute="leading" secondItem="yxy-kE-ewE" secondAttribute="leading" id="cxd-7K-f9B"/>
                             <constraint firstItem="2H4-aJ-Zu7" firstAttribute="leading" secondItem="yxy-kE-ewE" secondAttribute="leading" id="ggp-jf-eTQ"/>

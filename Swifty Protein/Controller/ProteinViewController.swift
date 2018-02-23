@@ -17,6 +17,12 @@ class ProteinViewController: UIViewController {
     
     var protein: (header: ProteinHeader, data: ProteinData)?
     var atoms: [String: Atom] = [:]
+    enum DisplayingStyle: Int {
+        case balls = 0
+        case ballsnsticks = 1
+        case sticks = 2
+    }
+    var displayingStyle: DisplayingStyle = .ballsnsticks
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +58,12 @@ class ProteinViewController: UIViewController {
         }
         self.headerDisplayer.animate(shown: !self.headerDisplayer.shown)
     }
+    
+    @IBAction func changeDisplayingStyle(_ sender: UISegmentedControl) {
+        self.displayingStyle = DisplayingStyle(rawValue: sender.selectedSegmentIndex)!
+        self.proteinView.reloadData()
+    }
+    
 }
 
 extension ProteinViewController: GraphNodeViewDataSource {
@@ -63,16 +75,30 @@ extension ProteinViewController: GraphNodeViewDataSource {
         guard let atom = self.atoms[name] else {
             return []
         }
-        return Set<String>(atom.conects.map({"\($0)"}))
+        if self.displayingStyle == .balls {
+            return []
+        } else {
+            return Set<String>(atom.conects.map({"\($0)"}))
+        }
     }
     
     func graphNodeView(_ graphNodeView: GraphNodeView, modelForNodeNamed name: String) -> SCNNode {
         guard let atom = self.atoms[name] else {
             return (self as GraphNodeViewDataSource).graphNodeView(graphNodeView, modelForNodeNamed: name)
         }
-        let sphere = SCNSphere(radius: CGFloat(atom.radius) / 2)
-        sphere.materials.first?.diffuse.contents = AtomManager.shared.atomColors[atom.symbol] ?? AtomManager.shared.unknownColor
-        let node = SCNNode(geometry: sphere)
+        let node: SCNNode
+        switch self.displayingStyle {
+        case .balls:
+            let sphere = SCNSphere(radius: CGFloat(atom.radius))
+            sphere.materials.first?.diffuse.contents = AtomManager.shared.atomColors[atom.symbol] ?? AtomManager.shared.unknownColor
+            node = SCNNode(geometry: sphere)
+        case .ballsnsticks:
+            let sphere = SCNSphere(radius: CGFloat(atom.radius) / 2)
+            sphere.materials.first?.diffuse.contents = AtomManager.shared.atomColors[atom.symbol] ?? AtomManager.shared.unknownColor
+            node = SCNNode(geometry: sphere)
+        case .sticks:
+            node = SCNNode()
+        }
         return node
     }
     
@@ -104,8 +130,17 @@ extension ProteinViewController: GraphNodeViewDataSource {
         guard let atom = self.atoms[name] else {
             return nil
         }
+        let lineWidth: Float
+        switch self.displayingStyle {
+        case .balls:
+            lineWidth = 0.0
+        case .ballsnsticks:
+            lineWidth = 0.15
+        case .sticks:
+            lineWidth = 0.075
+        }
         return GraphNodeView.LinkProperty(lineShape: .round,
-                                          lineWidth: 0.15,
+                                          lineWidth: lineWidth,
                                           color: AtomManager.shared.atomColors[atom.symbol] ?? AtomManager.shared.unknownColor,
                                           arrowShaped: false,
                                           startingDistance: 0.0, endingDistance: 0.5)

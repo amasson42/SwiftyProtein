@@ -87,7 +87,7 @@ extension GraphNodeViewDelegate {
 class GraphNodeView: UIView {
     
     struct Constants {
-        static let nodeRadius: Float = 0.1
+        static let nodeRadius: Float = 0.01
         static let preferedDistanceBetweenNodes: Float = 10.0
         static let startingDistanceBetweenNodes: Float = 1.0
         static let arrowHeadPercentOccupation: Float = 0.1
@@ -538,6 +538,10 @@ extension GraphNodeView {
         if let selectedNode = self.selectedNode {
             self.selectorNode.isHidden = false
             self.selectorNode.position = selectedNode.position
+            let boundingBox = selectedNode.boundingBox
+            self.selectorNode.scale.x = boundingBox.max.x - boundingBox.min.x
+            self.selectorNode.scale.y = boundingBox.max.y - boundingBox.min.y
+            self.selectorNode.scale.z = boundingBox.max.z - boundingBox.min.z
         } else {
             self.selectorNode.isHidden = true
         }
