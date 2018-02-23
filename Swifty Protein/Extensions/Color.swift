@@ -28,4 +28,10 @@ extension UIColor {
                   Int((rgbValue & 0x00FF00) >> 8),
                   Int((rgbValue & 0x0000FF) >> 0))
     }
+    
+    func lightedWith(factor: CGFloat) -> UIColor {
+        var (red, green, blue, alpha): (CGFloat, CGFloat, CGFloat, CGFloat) = (0, 0, 0, 0)
+        self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        return UIColor(red: factor * red, green: factor * green, blue: factor * blue, alpha: alpha)
+    }
 }

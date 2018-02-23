@@ -34,12 +34,9 @@ class ProteinViewController: UIViewController {
         self.navigationItem.title = protein?.header.id
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "model", style: .plain, target: nil, action: nil)
         self.proteinView.sceneBackground = UIColor.black
-        let rotateAction = SCNAction.repeatForever(.rotateBy(x: 0, y: 1, z: 0, duration: 2))
-        if let nodes = self.proteinView.sceneView.scene?.rootNode.childNode(withName: "nodes", recursively: true) {
-            nodes.runAction(rotateAction)
-        }
-        if let links = self.proteinView.sceneView.scene?.rootNode.childNode(withName: "links", recursively: true) {
-            links.runAction(rotateAction)
+        if let followCamera = self.proteinView.sceneView.scene?.rootNode.childNode(withName: "follow_camera", recursively: true) {
+            followCamera.eulerAngles.x = -.pi / 7
+            followCamera.runAction(.repeatForever(.rotateBy(x: 0, y: 1, z: 0, duration: 3)))
         }
         if let data = self.protein?.data {
             for atom in data.atoms {
@@ -153,6 +150,7 @@ extension ProteinViewController: GraphNodeViewDataSource {
             let color = AtomManager.shared.atomColors[atom.symbol] ?? AtomManager.shared.unknownColor
             let sphere = SCNSphere(radius: CGFloat(atom.radius) / 2)
             sphere.materials.first?.diffuse.contents = color
+            sphere.materials.first?.specular.contents = color.lightedWith(factor: 0.2)
             node = SCNNode(geometry: sphere)
         case .sticks:
             node = SCNNode()

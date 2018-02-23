@@ -428,9 +428,13 @@ extension GraphNodeView {
         
         // MARK: Camera settings
         let camera = SCNNode()
+        camera.name = "camera"
         camera.camera = SCNCamera()
         camera.position.z = 20
-        scene.rootNode.addChildNode(camera)
+        let follow_camera = SCNNode()
+        follow_camera.name = "follow_camera"
+        follow_camera.addChildNode(camera)
+        scene.rootNode.addChildNode(follow_camera)
         sceneView.pointOfView = camera
     }
     
