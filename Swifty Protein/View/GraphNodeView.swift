@@ -412,9 +412,11 @@ extension GraphNodeView {
         scene.background.contents = UIColor.black
         
         nodesNode = SCNNode()
+        nodesNode.name = "nodes"
         scene.rootNode.addChildNode(nodesNode)
         
         linksNode = SCNNode()
+        linksNode.name = "links"
         scene.rootNode.addChildNode(linksNode)
         
         selectorNode = SCNNode()

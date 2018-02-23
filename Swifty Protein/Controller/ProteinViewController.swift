@@ -23,6 +23,7 @@ class ProteinViewController: UIViewController {
         case sticks = 2
     }
     var displayingStyle: DisplayingStyle = .ballsnsticks
+    var usingEnvironement: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +33,14 @@ class ProteinViewController: UIViewController {
         self.atomDisplayerView.shown = false
         self.navigationItem.title = protein?.header.id
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "model", style: .plain, target: nil, action: nil)
-        self.proteinView.sceneBackground = UIColor.lightGray
+        self.proteinView.sceneBackground = UIColor.black
+        let rotateAction = SCNAction.repeatForever(.rotateBy(x: 0, y: 1, z: 0, duration: 2))
+        if let nodes = self.proteinView.sceneView.scene?.rootNode.childNode(withName: "nodes", recursively: true) {
+            nodes.runAction(rotateAction)
+        }
+        if let links = self.proteinView.sceneView.scene?.rootNode.childNode(withName: "links", recursively: true) {
+            links.runAction(rotateAction)
+        }
         if let data = self.protein?.data {
             for atom in data.atoms {
                 self.atoms["\(atom.id)"] = atom
@@ -64,11 +72,50 @@ class ProteinViewController: UIViewController {
         self.proteinView.reloadData()
     }
     
+    @IBAction func switchEnvironement(_ sender: UISwitch) {
+        self.usingEnvironement = sender.isOn
+        self.proteinView.reloadData()
+    }
 }
 
 extension ProteinViewController: GraphNodeViewDataSource {
+    
+    func createEnvNode() -> SCNNode {
+        let node = SCNNode()
+        
+        let ambiantLight = SCNNode()
+        ambiantLight.light = SCNLight()
+        ambiantLight.light!.type = .ambient
+        ambiantLight.light!.intensity *= 0.2
+        let spotLight = SCNNode()
+        spotLight.light = SCNLight()
+        spotLight.light!.type = .spot
+        spotLight.light!.spotInnerAngle *= 2
+        spotLight.light!.spotOuterAngle *= 2
+        spotLight.light!.castsShadow = true
+        spotLight.position = SCNVector3(x: 0, y: 0, z: 15)
+        let lightPosition = SCNNode()
+        lightPosition.eulerAngles.x = -.pi / 3
+        lightPosition.addChildNode(ambiantLight)
+        lightPosition.addChildNode(spotLight)
+        lightPosition.runAction(.repeatForever(.rotateBy(x: 0, y: -1, z: 0, duration: 2)))
+        node.addChildNode(lightPosition)
+        
+        let groundNode = SCNNode(geometry: SCNFloor())
+        groundNode.geometry!.materials.first!.diffuse.contents = UIColor(red: 0.0, green: 0.0, blue: 0.4, alpha: 1.0)
+        (groundNode.geometry as! SCNFloor).reflectivity = 0.6
+        groundNode.position.y = (self.atoms.values.map({$0.y}).min() ?? 0.0) - 2.0
+        node.addChildNode(groundNode)
+        
+        return node
+    }
+    
     func namesOfAllNodes(in graphNodeView: GraphNodeView) -> Set<String> {
-        return Set<String>(self.atoms.keys.map({"\($0)"}))
+        var set = Set<String>(self.atoms.keys.map({"\($0)"}))
+        if self.usingEnvironement {
+            set.insert("env")
+        }
+        return set
     }
     
     func graphNodeView(_ graphNodeView: GraphNodeView, linksForNodeNamed name: String) -> Set<String> {
@@ -83,6 +130,9 @@ extension ProteinViewController: GraphNodeViewDataSource {
     }
     
     func graphNodeView(_ graphNodeView: GraphNodeView, modelForNodeNamed name: String) -> SCNNode {
+        if name == "env" {
+            return self.createEnvNode()
+        }
         guard let atom = self.atoms[name] else {
             return (self as GraphNodeViewDataSource).graphNodeView(graphNodeView, modelForNodeNamed: name)
         }
@@ -93,8 +143,9 @@ extension ProteinViewController: GraphNodeViewDataSource {
             sphere.materials.first?.diffuse.contents = AtomManager.shared.atomColors[atom.symbol] ?? AtomManager.shared.unknownColor
             node = SCNNode(geometry: sphere)
         case .ballsnsticks:
+            let color = AtomManager.shared.atomColors[atom.symbol] ?? AtomManager.shared.unknownColor
             let sphere = SCNSphere(radius: CGFloat(atom.radius) / 2)
-            sphere.materials.first?.diffuse.contents = AtomManager.shared.atomColors[atom.symbol] ?? AtomManager.shared.unknownColor
+            sphere.materials.first?.diffuse.contents = color
             node = SCNNode(geometry: sphere)
         case .sticks:
             node = SCNNode()
@@ -103,6 +154,9 @@ extension ProteinViewController: GraphNodeViewDataSource {
     }
     
     func graphNodeView(_ graphNodeView: GraphNodeView, positionForNodeNamed name: String) -> SCNVector3? {
+        if name == "env" {
+            return SCNVector3Zero
+        }
         guard let atom = self.atoms[name] else {
             return nil
         }
@@ -153,13 +207,12 @@ extension ProteinViewController: GraphNodeViewDelegate {
         if self.headerDisplayer.shown {
             self.headerDisplayer.animate(shown: false)
         }
-        if let name = name {
-            guard let atom = self.atoms[name] else {
-                return
-            }
+        if let name = name,
+            let atom = self.atoms[name] {
             self.atomDisplayerView.atom = atom
             self.atomDisplayerView.animate(shown: true)
         } else {
+            graphNodeView.selectedNodeName = nil
             if self.atomDisplayerView.shown {
                 self.atomDisplayerView.animate(shown: false)
             }
